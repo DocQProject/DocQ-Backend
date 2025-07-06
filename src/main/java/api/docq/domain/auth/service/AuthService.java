@@ -54,7 +54,7 @@ public class AuthService {
         return SignUpResponse.of(accessToken);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public SignInResponse signIn(@Valid SignInRequest signInRequest) {
         User user = userRepository.findByLoginId(signInRequest.getLoginId())
                 .orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다."));

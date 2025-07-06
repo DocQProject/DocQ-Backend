@@ -32,4 +32,9 @@ public class AuthUser {
                 .userRole(userRole)
                 .build();
     }
+
+    public boolean hasRole(String role) {
+        return authorities.stream()
+                .anyMatch(authority -> authority.getAuthority().equals(role));
+    }
 }
