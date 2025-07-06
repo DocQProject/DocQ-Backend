@@ -1,5 +1,6 @@
 package api.docq.domain.post.entity;
 
+import api.docq.common.entity.TimeStamped;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "posts")
 @Getter
 @NoArgsConstructor
-public class Post {
+public class Post extends TimeStamped {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

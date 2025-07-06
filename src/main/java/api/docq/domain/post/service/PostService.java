@@ -32,6 +32,8 @@ public class PostService {
                 .content(post.getContent())
                 .author(authUser.getName())
                 .viewCount(post.getViewCount())
+                .createdAt(post.getCreatedAt())
+                .updatedAt(post.getUpdatedAt())
                 .build();
     }
 
@@ -47,6 +49,8 @@ public class PostService {
                 .content(post.getContent())
                 .author(post.getAuthor())
                 .viewCount(post.getViewCount())
+                .createdAt(post.getCreatedAt())
+                .updatedAt(post.getUpdatedAt())
                 .build();
     }
 
@@ -67,6 +71,8 @@ public class PostService {
                 .content(post.getContent())
                 .author(post.getAuthor())
                 .viewCount(post.getViewCount())
+                .createdAt(post.getCreatedAt())
+                .updatedAt(post.getUpdatedAt())
                 .build();
     }
 
