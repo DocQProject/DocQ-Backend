@@ -2,10 +2,13 @@ package api.docq.domain.post.service;
 
 import api.docq.common.dto.AuthUser;
 import api.docq.domain.post.dto.request.PostRequest;
+import api.docq.domain.post.dto.response.PostListResponse;
 import api.docq.domain.post.dto.response.PostResponse;
 import api.docq.domain.post.entity.Post;
 import api.docq.domain.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,32 +30,47 @@ public class PostService {
 
         postRepository.save(post);
 
-        return PostResponse.builder()
-                .title(post.getTitle())
-                .content(post.getContent())
-                .author(authUser.getName())
-                .viewCount(post.getViewCount())
-                .createdAt(post.getCreatedAt())
-                .updatedAt(post.getUpdatedAt())
-                .build();
+        return PostResponse.of(
+                post.getTitle(),
+                post.getContent(),
+                post.getAuthor(),
+                post.getViewCount(),
+                post.getCreatedAt(),
+                post.getUpdatedAt()
+        );
     }
 
     @Transactional
-    public PostResponse getPost(Long postId) {
+    public PostResponse findPost(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException());
 
         post.increaseViewCount();
 
-        return PostResponse.builder()
-                .title(post.getTitle())
-                .content(post.getContent())
-                .author(post.getAuthor())
-                .viewCount(post.getViewCount())
-                .createdAt(post.getCreatedAt())
-                .updatedAt(post.getUpdatedAt())
-                .build();
+        return PostResponse.of(
+                post.getTitle(),
+                post.getContent(),
+                post.getAuthor(),
+                post.getViewCount(),
+                post.getCreatedAt(),
+                post.getUpdatedAt()
+        );
     }
+
+
+    @Transactional(readOnly = true)
+    public Page<PostListResponse> getPosts(Pageable pageable) {
+
+        Page<Post> posts = postRepository.findAllNotDeleted(pageable);
+
+        return posts.map(post -> PostListResponse.of(
+                        post.getTitle(),
+                        post.getAuthor(),
+                        post.getViewCount(),
+                        post.getCreatedAt()
+                ));
+    }
+
 
     @Transactional
     public PostResponse updatePost(AuthUser authUser, Long postId, PostRequest request) {
@@ -60,20 +78,19 @@ public class PostService {
                 .orElseThrow(() -> new RuntimeException());
 
         // Post 작성자의 ID와 Post 를 수정하려는 클라이언트의 ID 일치 확인
-        if (post.getUserId().equals(authUser.getUserId())) {
-            post.updatePost(request.getTitle(), request.getContent());
-        } else {
+        if (!post.getUserId().equals(authUser.getUserId())) {
             throw new RuntimeException();
         }
+        post.updatePost(request.getTitle(), request.getContent());
 
-        return PostResponse.builder()
-                .title(post.getTitle())
-                .content(post.getContent())
-                .author(post.getAuthor())
-                .viewCount(post.getViewCount())
-                .createdAt(post.getCreatedAt())
-                .updatedAt(post.getUpdatedAt())
-                .build();
+        return PostResponse.of(
+                post.getTitle(),
+                post.getContent(),
+                post.getAuthor(),
+                post.getViewCount(),
+                post.getCreatedAt(),
+                post.getUpdatedAt()
+        );
     }
 
     @Transactional
@@ -81,12 +98,15 @@ public class PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException());
 
-        // Post 작성자의 ID와 Post 를 삭제하려는 클라이언트의 ID 일치 확인
-        if (post.getUserId().equals(authUser.getUserId())) {
-            post.deletePost();
-        }else {
+        boolean isAdmin = authUser.hasRole("ROLE_ADMIN");
+        boolean isAuthor = post.getUserId().equals(authUser.getUserId());
+
+        // ADMIN 이거나 해당 게시글 작성자이면 삭제
+        if (!isAdmin && !isAuthor) {
             throw new RuntimeException();
         }
+
+        post.deletePost();
     }
 
 

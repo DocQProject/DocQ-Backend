@@ -6,11 +6,9 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class PostResponse {
+public class PostListResponse {
 
     private final String title;
-
-    private final String content;
 
     private final String author;
 
@@ -18,27 +16,20 @@ public class PostResponse {
 
     private final LocalDateTime createdAt;
 
-    private final LocalDateTime updatedAt;
-
     @Builder
-    private PostResponse(String title, String content, String author, Integer viewCount, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    private PostListResponse(String title, String author, Integer viewCount, LocalDateTime createdAt) {
         this.title = title;
-        this.content = content;
         this.author = author;
         this.viewCount = viewCount;
         this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 
-    public static PostResponse of(String title, String content, String author, Integer viewCount, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        return PostResponse.builder()
+    public static PostListResponse of(String title, String author, Integer viewCount, LocalDateTime createdAt) {
+        return PostListResponse.builder()
                 .title(title)
-                .content(content)
                 .author(author)
                 .viewCount(viewCount)
                 .createdAt(createdAt)
-                .updatedAt(updatedAt)
                 .build();
     }
-
 }
