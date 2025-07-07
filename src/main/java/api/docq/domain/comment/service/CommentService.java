@@ -56,15 +56,12 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new RuntimeException());
 
-        User user = userRepository.findById(authUser.getUserId())
-                .orElseThrow(() -> new RuntimeException());
-
         validateAuthority(authUser, comment);
 
         comment.updateContent(request.getContent());
 
         return CommentResponse.of(
-                user.getName(),
+                authUser.getName(),
                 comment.getContent(),
                 comment.getCreatedAt()
         );
