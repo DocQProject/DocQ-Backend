@@ -22,7 +22,7 @@ public class CommentController {
      * 댓글 작성
      */
     @PreAuthorize("hasAnyRole('USER', 'DOCTOR')")
-    @PostMapping("/{postId}/comments")
+    @PostMapping("/posts/{postId}/comments")
     public ResponseEntity<CommentResponse> createComment(
             @AuthenticationPrincipal AuthUser authUser,
             @Valid @RequestBody CommentRequest request,
