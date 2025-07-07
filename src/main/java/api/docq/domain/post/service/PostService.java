@@ -3,14 +3,12 @@ package api.docq.domain.post.service;
 import api.docq.common.dto.AuthUser;
 import api.docq.domain.comment.dto.response.CommentResponse;
 import api.docq.domain.comment.entity.Comment;
-import api.docq.domain.comment.repository.CommentRepository;
+import api.docq.domain.comment.service.CommentService;
 import api.docq.domain.post.dto.request.PostRequest;
 import api.docq.domain.post.dto.response.PostListResponse;
 import api.docq.domain.post.dto.response.PostResponse;
 import api.docq.domain.post.entity.Post;
 import api.docq.domain.post.repository.PostRepository;
-import api.docq.domain.user.entity.User;
-import api.docq.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,18 +17,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class PostService {
 
     private final PostRepository postRepository;
-    private final CommentRepository commentRepository;
-    private final UserRepository userRepository;
+    private final CommentService commentService;
 
     @Transactional
     public PostResponse createPost(AuthUser authUser, PostRequest request) {
@@ -60,7 +53,7 @@ public class PostService {
 
         post.increaseViewCount();
 
-        List<CommentResponse> comments = getCommentResponseList(post);
+        List<CommentResponse> comments = commentService.getCommentResponseList(post);
 
         return PostResponse.of(
                 post.getTitle(),
@@ -96,7 +89,7 @@ public class PostService {
 
         post.updatePost(request.getTitle(), request.getContent());
 
-        List<CommentResponse> comments = getCommentResponseList(post);
+        List<CommentResponse> comments = commentService.getCommentResponseList(post);
 
         return PostResponse.of(
                 post.getTitle(),
@@ -118,7 +111,7 @@ public class PostService {
 
         post.deletePost();
 
-        List<Comment> comments = commentRepository.findCommentsByPostId(post.getId());
+        List<Comment> comments = commentService.findCommentsByPostId(post.getId());
 
         comments.forEach(Comment::deleteComment);
     }
@@ -130,29 +123,6 @@ public class PostService {
         if (!isAdmin && !isAuthor) {
             throw new RuntimeException();
         }
-    }
-
-    private List<CommentResponse> getCommentResponseList(Post post) {
-        List<Comment> commentList = commentRepository.findCommentsByPostId(post.getId());
-
-        Set<Long> userIds = commentList.stream()
-                .map(Comment::getUserId)
-                .collect(Collectors.toSet());
-
-        List<User> users = userRepository.findAllById(userIds);
-
-        Map<Long, User> userMap = users.stream()
-                .collect(Collectors.toMap(User::getId, Function.identity()));
-
-        return commentList.stream()
-                .map(comment -> {
-                    User user = userMap.get(comment.getUserId());
-                    return CommentResponse.of(
-                            user.getName(),
-                            comment.getContent(),
-                            comment.getCreatedAt()
-                    );
-                }).toList();
     }
 
 }
