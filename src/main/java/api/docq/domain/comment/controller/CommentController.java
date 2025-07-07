@@ -11,8 +11,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -31,14 +29,6 @@ public class CommentController {
             @PathVariable Long postId
     ) {
         return ResponseEntity.ok(commentService.createComment(authUser, request, postId));
-    }
-
-    /**
-     * 특정 게시글의 댓글 조회
-     */
-    @GetMapping("/{postId}/comments")
-    public ResponseEntity<List<CommentResponse>> getComments(@PathVariable Long postId) {
-        return ResponseEntity.ok(commentService.getComments(postId));
     }
 
     /**

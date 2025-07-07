@@ -11,8 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class CommentService {
@@ -42,22 +40,6 @@ public class CommentService {
                 );
     }
 
-    @Transactional(readOnly = true)
-    public List<CommentResponse> getComments(Long postId) {
-        return commentRepository.findCommentsByPostId(postId).stream()
-                .map(comment ->
-                        {
-                            User user = userRepository.findById(comment.getUserId())
-                                    .orElseThrow(() -> new RuntimeException());
-                            return CommentResponse.of(
-                                    user.getName(),
-                                    comment.getContent(),
-                                    comment.getCreatedAt()
-                                    );
-                        }
-                ).toList();
-    }
-
     @Transactional
     public CommentResponse updateComment(
             AuthUser authUser,
@@ -70,12 +52,8 @@ public class CommentService {
         User user = userRepository.findById(authUser.getUserId())
                 .orElseThrow(() -> new RuntimeException());
 
-        boolean isAdmin = authUser.hasRole("ROLE_ADMIN");
-        boolean isAuthor = comment.getUserId().equals(authUser.getUserId());
+        validateAuthority(authUser, comment);
 
-        if (!isAdmin && !isAuthor) {
-            throw new RuntimeException();
-        }
         comment.updateContent(request.getContent());
 
         return CommentResponse.of(
@@ -91,13 +69,17 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new RuntimeException());
 
+        validateAuthority(authUser, comment);
+
+        comment.deleteComment();
+    }
+
+    private void validateAuthority(AuthUser authUser, Comment comment) {
         boolean isAdmin = authUser.hasRole("ROLE_ADMIN");
         boolean isAuthor = comment.getUserId().equals(authUser.getUserId());
 
         if (!isAdmin && !isAuthor) {
             throw new RuntimeException();
         }
-
-        comment.deleteComment();
     }
 }
