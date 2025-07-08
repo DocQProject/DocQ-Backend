@@ -1,7 +1,9 @@
 package api.docq.domain.user.controller;
 
 import api.docq.common.dto.AuthUser;
+import api.docq.domain.user.dto.request.UserUpdateClinicRequest;
 import api.docq.domain.user.dto.request.UserUpdatePasswordRequest;
+import api.docq.domain.user.dto.request.UserUpdateProfileRequest;
 import api.docq.domain.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +32,32 @@ public class UserController {
             @Valid @RequestBody UserUpdatePasswordRequest request
     ) {
         userService.updatePassword(authUser, request);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * 유저 프로필 변경하기(name, email)
+     */
+    @PreAuthorize("hasAnyRole('USER', 'DOCTOR')")
+    @PatchMapping("/profile")
+    public ResponseEntity<Void> updateProfile(
+            @AuthenticationPrincipal AuthUser authUser,
+            @Valid @RequestBody UserUpdateProfileRequest request
+    ) {
+        userService.updateProfile(authUser, request);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * 유저 병원 변경하기
+     */
+    @PreAuthorize("hasAnyRole('DOCTOR')")
+    @PatchMapping("/clinic")
+    public ResponseEntity<Void> updateClinic(
+            @AuthenticationPrincipal AuthUser authUser,
+            @Valid @RequestBody UserUpdateClinicRequest request
+    ) {
+        userService.updateClinic(authUser, request);
         return ResponseEntity.ok().build();
     }
 }
