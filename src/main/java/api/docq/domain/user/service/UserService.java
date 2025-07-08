@@ -4,11 +4,14 @@ import api.docq.common.dto.AuthUser;
 import api.docq.domain.user.dto.request.UserUpdateClinicRequest;
 import api.docq.domain.user.dto.request.UserUpdatePasswordRequest;
 import api.docq.domain.user.dto.request.UserUpdateProfileRequest;
+import api.docq.domain.user.dto.response.UserGetResponse;
 import api.docq.domain.user.dto.response.UserResponse;
 import api.docq.domain.user.entity.User;
 import api.docq.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,5 +71,22 @@ public class UserService {
                 user.getRole(),
                 user.getCreatedAt()
         );
+    }
+
+    public Page<UserGetResponse> getUsers(int pageNum, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNum, pageSize);
+
+        return userRepository.findAll(pageRequest)
+                .map(user -> UserGetResponse.of(
+                        user.getId(),
+                        user.getLoginId(),
+                        user.getName(),
+                        user.getEmail(),
+                        user.getClinicId(),
+                        user.getRole(),
+                        user.getCreatedAt(),
+                        user.getUpdatedAt(),
+                        user.isDeleted())
+                );
     }
 }

@@ -4,10 +4,13 @@ import api.docq.common.dto.AuthUser;
 import api.docq.domain.user.dto.request.UserUpdateClinicRequest;
 import api.docq.domain.user.dto.request.UserUpdatePasswordRequest;
 import api.docq.domain.user.dto.request.UserUpdateProfileRequest;
+import api.docq.domain.user.dto.response.UserGetResponse;
 import api.docq.domain.user.dto.response.UserResponse;
 import api.docq.domain.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -42,6 +45,17 @@ public class UserController {
             @AuthenticationPrincipal AuthUser authUser
     ) {
         return ResponseEntity.ok(userService.findUser(authUser));
+    }
+
+    /**
+     * 유저 조회하기 (관리자용)
+     */
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @GetMapping
+    public ResponseEntity<Page<UserGetResponse>> getUsers(
+            PageableDefault pageable
+    ) {
+        return ResponseEntity.ok(userService.getUsers(pageable.page(), pageable.size()));
     }
 
     /**
