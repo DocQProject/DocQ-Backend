@@ -13,7 +13,7 @@ public class UserUpdateProfileRequest {
     private final String name;
 
     @Email
-    @NotBlank(message = "이름을 입력해주세요.")
+    @NotBlank(message = "이메일을 입력해주세요.")
     @Pattern(regexp = "^[\\w!#$%&'*+/=?`{|}~^.-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$", message = "이메일 형식이 올바르지 않습니다.")
     private final String email;
 }

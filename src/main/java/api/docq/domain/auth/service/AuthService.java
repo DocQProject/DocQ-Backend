@@ -37,6 +37,8 @@ public class AuthService {
             throw new RuntimeException("병원 정보는 의사만 가질 수 있는 필드입니다.");
         }
 
+        //todo: 병원 존재 여부 조건 추가
+
         String encodePassword = passwordEncoder.encode(signUpRequest.getPassword());
 
         User user = User.of(
