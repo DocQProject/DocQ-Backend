@@ -27,6 +27,10 @@ public class UserService {
             throw new RuntimeException("기존 비밀번호가 일치하지 않습니다.");
         }
 
+        if (request.getPassword().equals(request.getNewPassword())) {
+            throw new RuntimeException("새 비밀번호는 기존 비밀번화 일치할 수 없습니다.");
+        }
+
         String encodePassword = passwordEncoder.encode(request.getNewPassword());
         user.updatePassword(encodePassword);
     }
