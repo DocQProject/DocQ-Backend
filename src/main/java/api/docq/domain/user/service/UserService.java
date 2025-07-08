@@ -4,6 +4,7 @@ import api.docq.common.dto.AuthUser;
 import api.docq.domain.user.dto.request.UserUpdateClinicRequest;
 import api.docq.domain.user.dto.request.UserUpdatePasswordRequest;
 import api.docq.domain.user.dto.request.UserUpdateProfileRequest;
+import api.docq.domain.user.dto.response.UserResponse;
 import api.docq.domain.user.entity.User;
 import api.docq.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -52,5 +53,20 @@ public class UserService {
 
         //todo: Clinic이 존재하는지 확인하는 조건 추가
         user.updateClicnic(request.getClinicId());
+    }
+
+    public UserResponse findUser(AuthUser authUser) {
+        User user = userRepository.findByLoginId(authUser.getLoginId())
+                .orElseThrow(() -> new RuntimeException("유저가 존재하지 않습니다."));
+
+        return UserResponse.of(
+                user.getId(),
+                user.getLoginId(),
+                user.getName(),
+                user.getEmail(),
+                user.getClinicId(),
+                user.getRole(),
+                user.getCreatedAt()
+        );
     }
 }

@@ -4,16 +4,14 @@ import api.docq.common.dto.AuthUser;
 import api.docq.domain.user.dto.request.UserUpdateClinicRequest;
 import api.docq.domain.user.dto.request.UserUpdatePasswordRequest;
 import api.docq.domain.user.dto.request.UserUpdateProfileRequest;
+import api.docq.domain.user.dto.response.UserResponse;
 import api.docq.domain.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,6 +31,17 @@ public class UserController {
     ) {
         userService.updatePassword(authUser, request);
         return ResponseEntity.ok().build();
+    }
+
+    /**
+     * 유저 조회하기 (본인용)
+     */
+    @PreAuthorize("hasAnyRole('USER', 'DOCTOR')")
+    @GetMapping("/me")
+    public ResponseEntity<UserResponse> getUser(
+            @AuthenticationPrincipal AuthUser authUser
+    ) {
+        return ResponseEntity.ok(userService.findUser(authUser));
     }
 
     /**
