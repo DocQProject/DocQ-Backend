@@ -49,7 +49,7 @@ public class AuthService {
         );
 
         userRepository.save(user);
-        String accessToken = jwtProvider.createAccessToken(user.getId(), user.getEmail(), user.getName(), user.getRole());
+        String accessToken = jwtProvider.createAccessToken(user.getId(), user.getLoginId(), user.getName(), user.getRole());
 
         return SignUpResponse.of(accessToken);
     }
@@ -63,7 +63,7 @@ public class AuthService {
             throw new RuntimeException("비밀번호가 일치하지 않습니다.");
         }
 
-        String accessToken = jwtProvider.createAccessToken(user.getId(), user.getEmail(), user.getName(), user.getRole());
+        String accessToken = jwtProvider.createAccessToken(user.getId(), user.getLoginId(), user.getName(), user.getRole());
 
         return SignInResponse.of(accessToken);
     }

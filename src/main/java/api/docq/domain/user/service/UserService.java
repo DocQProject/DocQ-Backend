@@ -4,11 +4,13 @@ import api.docq.common.dto.AuthUser;
 import api.docq.domain.user.dto.request.UserUpdatePasswordRequest;
 import api.docq.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import api.docq.domain.user.repository.UserRepository;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
