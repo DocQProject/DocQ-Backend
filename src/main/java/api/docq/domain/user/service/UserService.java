@@ -27,8 +27,7 @@ public class UserService {
 
     @Transactional
     public void updatePassword(AuthUser authUser, UserUpdatePasswordRequest request) {
-        User user = userRepository.findByLoginId(authUser.getLoginId())
-                .orElseThrow(() -> new RuntimeException("유저가 존재하지 않습니다."));
+        User user = findUserOrElseThrow(authUser);
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new RuntimeException("기존 비밀번호가 일치하지 않습니다.");
@@ -44,16 +43,14 @@ public class UserService {
 
     @Transactional
     public void updateProfile(AuthUser authUser, UserUpdateProfileRequest request) {
-        User user = userRepository.findByLoginId(authUser.getLoginId())
-                .orElseThrow(() -> new RuntimeException("유저가 존재하지 않습니다."));
+        User user = findUserOrElseThrow(authUser);
 
         user.updateNameAndEmail(request.getName(), request.getEmail());
     }
 
     @Transactional
     public void updateClinic(AuthUser authUser, UserUpdateClinicRequest request) {
-        User user = userRepository.findByLoginId(authUser.getLoginId())
-                .orElseThrow(() -> new RuntimeException("유저가 존재하지 않습니다."));
+        User user = findUserOrElseThrow(authUser);
 
         //todo: Clinic이 존재하는지 확인하는 조건 추가
         user.updateClicnic(request.getClinicId());
@@ -61,8 +58,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserResponse findUser(AuthUser authUser) {
-        User user = userRepository.findByLoginId(authUser.getLoginId())
-                .orElseThrow(() -> new RuntimeException("유저가 존재하지 않습니다."));
+        User user = findUserOrElseThrow(authUser);
 
         return UserResponse.of(
                 user.getId(),
@@ -95,13 +91,17 @@ public class UserService {
 
     @Transactional
     public void deleteUser(AuthUser authUser, UserDeleteRequest request) {
-        User user = userRepository.findByLoginId(authUser.getLoginId())
-                .orElseThrow(() -> new RuntimeException("유저가 존재하지 않습니다."));
+        User user = findUserOrElseThrow(authUser);
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new RuntimeException("비밀번호가 일치하지 않습니다.");
         }
 
         user.delete();
+    }
+
+    public User findUserOrElseThrow(AuthUser authUser) {
+        return userRepository.findByLoginId(authUser.getLoginId())
+                .orElseThrow(() -> new RuntimeException("유저가 존재하지 않습니다."));
     }
 }
