@@ -1,6 +1,9 @@
 package api.docq.domain.post.service;
 
 import api.docq.common.dto.AuthUser;
+import api.docq.domain.comment.dto.response.CommentResponse;
+import api.docq.domain.comment.entity.Comment;
+import api.docq.domain.comment.service.CommentService;
 import api.docq.domain.post.dto.request.PostRequest;
 import api.docq.domain.post.dto.response.PostListResponse;
 import api.docq.domain.post.dto.response.PostResponse;
@@ -12,11 +15,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class PostService {
 
     private final PostRepository postRepository;
+    private final CommentService commentService;
 
     @Transactional
     public PostResponse createPost(AuthUser authUser, PostRequest request) {
@@ -28,15 +35,14 @@ public class PostService {
                 request.getContent()
         );
 
-        postRepository.save(post);
-
         return PostResponse.of(
                 post.getTitle(),
                 post.getContent(),
                 post.getAuthor(),
                 post.getViewCount(),
                 post.getCreatedAt(),
-                post.getUpdatedAt()
+                post.getUpdatedAt(),
+                Collections.emptyList()
         );
     }
 
@@ -47,16 +53,18 @@ public class PostService {
 
         post.increaseViewCount();
 
+        List<CommentResponse> comments = commentService.getCommentResponseList(post);
+
         return PostResponse.of(
                 post.getTitle(),
                 post.getContent(),
                 post.getAuthor(),
                 post.getViewCount(),
                 post.getCreatedAt(),
-                post.getUpdatedAt()
+                post.getUpdatedAt(),
+                comments
         );
     }
-
 
     @Transactional(readOnly = true)
     public Page<PostListResponse> getPosts(Pageable pageable) {
@@ -77,11 +85,11 @@ public class PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException());
 
-        // Post 작성자의 ID와 Post 를 수정하려는 클라이언트의 ID 일치 확인
-        if (!post.getUserId().equals(authUser.getUserId())) {
-            throw new RuntimeException();
-        }
+        validateAuthority(authUser, post);
+
         post.updatePost(request.getTitle(), request.getContent());
+
+        List<CommentResponse> comments = commentService.getCommentResponseList(post);
 
         return PostResponse.of(
                 post.getTitle(),
@@ -89,7 +97,8 @@ public class PostService {
                 post.getAuthor(),
                 post.getViewCount(),
                 post.getCreatedAt(),
-                post.getUpdatedAt()
+                post.getUpdatedAt(),
+                comments
         );
     }
 
@@ -98,16 +107,22 @@ public class PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException());
 
+        validateAuthority(authUser, post);
+
+        post.deletePost();
+
+        List<Comment> comments = commentService.findCommentsByPostId(post.getId());
+
+        comments.forEach(Comment::deleteComment);
+    }
+
+    private void validateAuthority(AuthUser authUser, Post post) {
         boolean isAdmin = authUser.hasRole("ROLE_ADMIN");
         boolean isAuthor = post.getUserId().equals(authUser.getUserId());
 
-        // ADMIN 이거나 해당 게시글 작성자이면 삭제
         if (!isAdmin && !isAuthor) {
             throw new RuntimeException();
         }
-
-        post.deletePost();
     }
-
 
 }
