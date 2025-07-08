@@ -72,4 +72,8 @@ public class User extends TimeStamped {
     public void updateClicnic(Long clinicId) {
         this.clinicId = clinicId;
     }
+
+    public void delete() {
+        this.isDeleted = true;
+    }
 }

@@ -1,6 +1,7 @@
 package api.docq.domain.user.controller;
 
 import api.docq.common.dto.AuthUser;
+import api.docq.domain.user.dto.request.UserDeleteRequest;
 import api.docq.domain.user.dto.request.UserUpdateClinicRequest;
 import api.docq.domain.user.dto.request.UserUpdatePasswordRequest;
 import api.docq.domain.user.dto.request.UserUpdateProfileRequest;
@@ -26,7 +27,6 @@ public class UserController {
     /**
      * 유저 비밀번호 변경하기
      */
-    @PreAuthorize("hasAnyRole('USER', 'DOCTOR')")
     @PatchMapping("/password")
     public ResponseEntity<Void> updatePassword(
             @AuthenticationPrincipal AuthUser authUser,
@@ -39,7 +39,6 @@ public class UserController {
     /**
      * 유저 조회하기 (본인용)
      */
-    @PreAuthorize("hasAnyRole('USER', 'DOCTOR')")
     @GetMapping("/me")
     public ResponseEntity<UserResponse> getUser(
             @AuthenticationPrincipal AuthUser authUser
@@ -61,7 +60,6 @@ public class UserController {
     /**
      * 유저 프로필 변경하기(name, email)
      */
-    @PreAuthorize("hasAnyRole('USER', 'DOCTOR')")
     @PatchMapping("/profile")
     public ResponseEntity<Void> updateProfile(
             @AuthenticationPrincipal AuthUser authUser,
@@ -81,6 +79,18 @@ public class UserController {
             @Valid @RequestBody UserUpdateClinicRequest request
     ) {
         userService.updateClinic(authUser, request);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * 유저 탈퇴하기
+     */
+    @DeleteMapping
+    public ResponseEntity<Void> deleteUser(
+            @AuthenticationPrincipal AuthUser authUser,
+            @Valid @RequestBody UserDeleteRequest request
+    ) {
+        userService.deleteUser(authUser, request);
         return ResponseEntity.ok().build();
     }
 }

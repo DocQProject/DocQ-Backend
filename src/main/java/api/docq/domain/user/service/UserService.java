@@ -1,6 +1,7 @@
 package api.docq.domain.user.service;
 
 import api.docq.common.dto.AuthUser;
+import api.docq.domain.user.dto.request.UserDeleteRequest;
 import api.docq.domain.user.dto.request.UserUpdateClinicRequest;
 import api.docq.domain.user.dto.request.UserUpdatePasswordRequest;
 import api.docq.domain.user.dto.request.UserUpdateProfileRequest;
@@ -58,6 +59,7 @@ public class UserService {
         user.updateClicnic(request.getClinicId());
     }
 
+    @Transactional(readOnly = true)
     public UserResponse findUser(AuthUser authUser) {
         User user = userRepository.findByLoginId(authUser.getLoginId())
                 .orElseThrow(() -> new RuntimeException("유저가 존재하지 않습니다."));
@@ -73,6 +75,7 @@ public class UserService {
         );
     }
 
+    @Transactional(readOnly = true)
     public Page<UserGetResponse> getUsers(int pageNum, int pageSize) {
         PageRequest pageRequest = PageRequest.of(pageNum, pageSize);
 
@@ -88,5 +91,17 @@ public class UserService {
                         user.getUpdatedAt(),
                         user.isDeleted())
                 );
+    }
+
+    @Transactional
+    public void deleteUser(AuthUser authUser, UserDeleteRequest request) {
+        User user = userRepository.findByLoginId(authUser.getLoginId())
+                .orElseThrow(() -> new RuntimeException("유저가 존재하지 않습니다."));
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+        }
+
+        user.delete();
     }
 }
