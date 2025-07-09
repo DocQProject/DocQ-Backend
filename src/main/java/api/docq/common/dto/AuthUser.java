@@ -17,7 +17,7 @@ public class AuthUser {
     private final Collection<? extends GrantedAuthority> authorities;
 
     @Builder
-    public AuthUser(Long userId, String loginId,String name, UserRole userRole) {
+    private AuthUser(Long userId, String loginId,String name, UserRole userRole) {
         this.userId = userId;
         this.loginId= loginId;
         this.name = name;
