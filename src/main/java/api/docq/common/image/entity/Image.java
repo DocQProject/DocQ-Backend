@@ -19,6 +19,7 @@ public class Image {
 
     private Long referenceId;
 
+    @Enumerated(EnumType.STRING)
     private ReferenceType referenceType;
 
     private String extension;

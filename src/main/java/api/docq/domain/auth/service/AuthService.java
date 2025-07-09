@@ -37,6 +37,8 @@ public class AuthService {
             throw new RuntimeException("병원 정보는 의사만 가질 수 있는 필드입니다.");
         }
 
+        //todo: 병원 존재 여부 조건 추가
+
         String encodePassword = passwordEncoder.encode(signUpRequest.getPassword());
 
         User user = User.of(
@@ -49,7 +51,7 @@ public class AuthService {
         );
 
         userRepository.save(user);
-        String accessToken = jwtProvider.createAccessToken(user.getId(), user.getEmail(), user.getName(), user.getRole());
+        String accessToken = jwtProvider.createAccessToken(user.getId(), user.getLoginId(), user.getName(), user.getRole());
 
         return SignUpResponse.of(accessToken);
     }
@@ -63,7 +65,7 @@ public class AuthService {
             throw new RuntimeException("비밀번호가 일치하지 않습니다.");
         }
 
-        String accessToken = jwtProvider.createAccessToken(user.getId(), user.getEmail(), user.getName(), user.getRole());
+        String accessToken = jwtProvider.createAccessToken(user.getId(), user.getLoginId(), user.getName(), user.getRole());
 
         return SignInResponse.of(accessToken);
     }
