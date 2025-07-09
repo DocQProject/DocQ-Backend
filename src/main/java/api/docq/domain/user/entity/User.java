@@ -69,7 +69,7 @@ public class User extends TimeStamped {
         this.email = email;
     }
 
-    public void updateClicnic(Long clinicId) {
+    public void updateClinic(Long clinicId) {
         this.clinicId = clinicId;
     }
 

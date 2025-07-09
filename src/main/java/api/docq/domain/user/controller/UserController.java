@@ -2,7 +2,6 @@ package api.docq.domain.user.controller;
 
 import api.docq.common.dto.AuthUser;
 import api.docq.domain.user.dto.request.UserDeleteRequest;
-import api.docq.domain.user.dto.request.UserUpdateClinicRequest;
 import api.docq.domain.user.dto.request.UserUpdatePasswordRequest;
 import api.docq.domain.user.dto.request.UserUpdateProfileRequest;
 import api.docq.domain.user.dto.response.UserGetResponse;
@@ -32,7 +31,7 @@ public class UserController {
             @AuthenticationPrincipal AuthUser authUser,
             @Valid @RequestBody UserUpdatePasswordRequest request
     ) {
-        userService.updatePassword(authUser, request);
+        userService.updatePassword(authUser.getLoginId(), request);
         return ResponseEntity.ok().build();
     }
 
@@ -43,7 +42,7 @@ public class UserController {
     public ResponseEntity<UserResponse> getUser(
             @AuthenticationPrincipal AuthUser authUser
     ) {
-        return ResponseEntity.ok(userService.findUser(authUser));
+        return ResponseEntity.ok(userService.findUser(authUser.getLoginId()));
     }
 
     /**
@@ -65,7 +64,7 @@ public class UserController {
             @AuthenticationPrincipal AuthUser authUser,
             @Valid @RequestBody UserUpdateProfileRequest request
     ) {
-        userService.updateProfile(authUser, request);
+        userService.updateProfile(authUser.getLoginId(), request);
         return ResponseEntity.ok().build();
     }
 
@@ -73,12 +72,12 @@ public class UserController {
      * 유저 병원 변경하기
      */
     @PreAuthorize("hasAnyRole('DOCTOR')")
-    @PatchMapping("/clinic")
+    @PatchMapping("/clinics/{clinicIc}")
     public ResponseEntity<Void> updateClinic(
             @AuthenticationPrincipal AuthUser authUser,
-            @Valid @RequestBody UserUpdateClinicRequest request
+            @PathVariable Long clinicId
     ) {
-        userService.updateClinic(authUser, request);
+        userService.updateClinic(authUser.getLoginId(), clinicId);
         return ResponseEntity.ok().build();
     }
 
@@ -90,7 +89,7 @@ public class UserController {
             @AuthenticationPrincipal AuthUser authUser,
             @Valid @RequestBody UserDeleteRequest request
     ) {
-        userService.deleteUser(authUser, request);
+        userService.deleteUser(authUser.getLoginId(), request);
         return ResponseEntity.ok().build();
     }
 }
