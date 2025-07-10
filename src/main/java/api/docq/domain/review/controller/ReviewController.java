@@ -4,6 +4,7 @@ import api.docq.common.dto.AuthUser;
 import api.docq.domain.review.dto.request.ReviewRequest;
 import api.docq.domain.review.dto.response.ReviewResponse;
 import api.docq.domain.review.service.ReviewService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -11,17 +12,32 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/clinics/{clinicId}")
+@RequestMapping("/api")
 public class ReviewController {
 
     private final ReviewService reviewService;
 
-    @PostMapping("/reviews")
+    /**
+     *  리뷰 작성
+     */
+    @PostMapping("/clinics/{clinicId}/reviews")
     public ResponseEntity<ReviewResponse> createReview(
             @AuthenticationPrincipal AuthUser authUser,
-            @RequestBody ReviewRequest request,
+            @Valid @RequestBody ReviewRequest request,
             @PathVariable Long clinicId
     ) {
         return ResponseEntity.ok(reviewService.createReview(authUser, request, clinicId));
+    }
+
+    /**
+     *  리뷰 수정
+     */
+    @PutMapping("/reviews/{reviewId}")
+    public ResponseEntity<ReviewResponse> updateReview(
+            @AuthenticationPrincipal AuthUser authUser,
+            @Valid @RequestBody ReviewRequest request,
+            @PathVariable Long reviewId
+    ) {
+        return ResponseEntity.ok(reviewService.updateReview(authUser.getName(), request, reviewId));
     }
 }

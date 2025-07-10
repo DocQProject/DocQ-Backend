@@ -40,4 +40,9 @@ public class Review extends TimeStamped {
                 .starPoint(starPoint)
                 .build();
     }
+
+    public void updateContentAndStar(String content, Integer starPoint) {
+        this.content = content;
+        this.starPoint = starPoint;
+    }
 }

@@ -8,6 +8,7 @@ import api.docq.domain.review.dto.request.ReviewRequest;
 import api.docq.domain.review.dto.response.ReviewResponse;
 import api.docq.domain.review.entity.Review;
 import api.docq.domain.review.repository.ReviewRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +44,23 @@ public class ReviewService {
         ) ;
     }
 
+
+    @Transactional
+    public ReviewResponse updateReview(String userName, ReviewRequest request, Long reviewId) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new RuntimeException("리뷰가 존재하지 않습니다."));
+
+        review.updateContentAndStar(request.getContent(), review.getStarPoint());
+        List<String> imageUrls = getImageUrls(review.getId());
+
+        return ReviewResponse.of(
+                userName,
+                review.getContent(),
+                review.getStarPoint(),
+                imageUrls,
+                review.getCreatedAt()
+        ) ;
+    }
 
     private List<String> getImageUrls(Long reviewId) {
         List<Image> images = imageRepository.findByReferenceIdAndReferenceType(reviewId, ReferenceType.REVIEW);
