@@ -6,13 +6,12 @@ import api.docq.domain.clinic.dto.response.ClinicRespone;
 import api.docq.domain.clinic.service.ClinicService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,14 +33,22 @@ public class ClinicController {
     }
 
     /**
-     * 병원 생성
+     * 병원 단건 조회
      */
-    @PreAuthorize("hasAnyRole('DOCTOR')")
-    @PostMapping
-    public ResponseEntity<ClinicRespone> createClinic(
-            @AuthenticationPrincipal AuthUser authUser,
-            @Valid @RequestBody ClinicCreateRequest request
+    @GetMapping("{clinicId}")
+    public ResponseEntity<ClinicRespone> findClinic(
+            @PathVariable Long clinicId
     ) {
-        return ResponseEntity.ok(clinicService.createClinic(authUser.getUserId(), request));
+        return ResponseEntity.ok(clinicService.findClinic(clinicId));
+    }
+
+    /**
+     * 병원 다건 조회
+     */
+    @GetMapping
+    public ResponseEntity<Page<ClinicRespone>> getClinic(
+            Pageable pageable
+    ) {
+        return ResponseEntity.ok(clinicService.getClinic(pageable));
     }
 }

@@ -6,6 +6,8 @@ import api.docq.domain.clinic.entity.Clinic;
 import api.docq.domain.clinic.repository.ClinicRepository;
 import api.docq.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,6 +49,38 @@ public class ClinicService {
                 clinic.isDeleted(),
                 clinic.getCreatedAt()
         );
+    }
+
+    @Transactional(readOnly = true)
+    public ClinicRespone findClinic(Long clinicId) {
+        Clinic clinic = clinicRepository.findById(clinicId)
+                .orElseThrow(() -> new RuntimeException("병원이 존재하지 않습니다."));
+
+        return ClinicRespone.of(
+                clinic.getId(),
+                clinic.getName(),
+                clinic.getAddress(),
+                clinic.getDepartMent(),
+                clinic.getOpenTime(),
+                clinic.getCloseTime(),
+                clinic.isDeleted(),
+                clinic.getCreatedAt()
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ClinicRespone> getClinic(Pageable pageable) {
+        return clinicRepository.findAllIsNotDeleted(pageable)
+                .map(clinic -> ClinicRespone.of(
+                        clinic.getId(),
+                        clinic.getName(),
+                        clinic.getAddress(),
+                        clinic.getDepartMent(),
+                        clinic.getOpenTime(),
+                        clinic.getCloseTime(),
+                        clinic.isDeleted(),
+                        clinic.getCreatedAt())
+                );
     }
 
     private void validOpenAndCloseTime(LocalTime openTime, LocalTime closeTime) {
