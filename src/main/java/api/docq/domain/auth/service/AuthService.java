@@ -5,9 +5,9 @@ import api.docq.domain.auth.dto.request.SignInRequest;
 import api.docq.domain.auth.dto.request.SignUpRequest;
 import api.docq.domain.auth.dto.response.SignInResponse;
 import api.docq.domain.auth.dto.response.SignUpResponse;
-import api.docq.domain.user.repository.UserRepository;
+import api.docq.domain.clinic.repository.ClinicRepository;
 import api.docq.domain.user.entity.User;
-import jakarta.validation.Valid;
+import api.docq.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,6 +22,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
+    private final ClinicRepository clinicRepository;
 
     @Transactional
     public SignUpResponse signUp(SignUpRequest signUpRequest) {
@@ -37,7 +38,9 @@ public class AuthService {
             throw new RuntimeException("병원 정보는 의사만 가질 수 있는 필드입니다.");
         }
 
-        //todo: 병원 존재 여부 조건 추가
+        if (!clinicRepository.existsById(signUpRequest.getClinicId()) && signUpRequest.getClinicId() != null) {
+            throw new RuntimeException("병원이 존재하지 않습니다.");
+        }
 
         String encodePassword = passwordEncoder.encode(signUpRequest.getPassword());
 
@@ -58,7 +61,7 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public SignInResponse signIn(SignInRequest signInRequest) {
-        User user = (User) userRepository.findByLoginId(signInRequest.getLoginId())
+        User user = userRepository.findByLoginId(signInRequest.getLoginId())
                 .orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다."));
 
         if (!passwordEncoder.matches(signInRequest.getPassword(), user.getPassword())) {

@@ -1,5 +1,6 @@
 package api.docq.domain.user.service;
 
+import api.docq.domain.clinic.repository.ClinicRepository;
 import api.docq.domain.user.dto.request.UserDeleteRequest;
 import api.docq.domain.user.dto.request.UserUpdatePasswordRequest;
 import api.docq.domain.user.dto.request.UserUpdateProfileRequest;
@@ -22,6 +23,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ClinicRepository clinicRepository;
 
     @Transactional
     public void updatePassword(Long userId, UserUpdatePasswordRequest request) {
@@ -50,7 +52,10 @@ public class UserService {
     public void updateClinic(Long userId, Long clinicId) {
         User user = findUserByUserIdOrElseThrow(userId);
 
-        //todo: Clinic이 존재하는지 확인하는 조건 추가
+        if (!clinicRepository.existsById(clinicId)) {
+            throw new RuntimeException("병원이 존재하지 않습니다.");
+        }
+
         user.updateClinic(clinicId);
     }
 
