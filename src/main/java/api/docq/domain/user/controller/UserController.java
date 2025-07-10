@@ -72,7 +72,7 @@ public class UserController {
      * 유저 병원 변경하기
      */
     @PreAuthorize("hasAnyRole('DOCTOR')")
-    @PatchMapping("/clinics/{clinicIc}")
+    @PatchMapping("/clinics/{clinicId}")
     public ResponseEntity<Void> updateClinic(
             @AuthenticationPrincipal AuthUser authUser,
             @PathVariable Long clinicId

@@ -21,7 +21,7 @@ public class Clinic extends TimeStamped {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String address;
 
     @Column(nullable = false)
