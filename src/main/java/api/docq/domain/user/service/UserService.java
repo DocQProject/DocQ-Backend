@@ -100,4 +100,10 @@ public class UserService {
         return userRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("유저가 존재하지 않습니다."));
     }
+
+    public void existsByUserId(Long userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new RuntimeException("유저가 존재하지 않습니다.");
+        }
+    }
 }
