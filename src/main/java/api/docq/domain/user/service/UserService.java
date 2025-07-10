@@ -1,5 +1,6 @@
 package api.docq.domain.user.service;
 
+import api.docq.domain.clinic.entity.Clinic;
 import api.docq.domain.clinic.repository.ClinicRepository;
 import api.docq.domain.user.dto.request.UserDeleteRequest;
 import api.docq.domain.user.dto.request.UserUpdatePasswordRequest;
@@ -62,13 +63,15 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserResponse findUser(Long userId) {
         User user = findUserByUserIdOrElseThrow(userId);
+        String clinicName = clinicRepository.findClinicNameById(user.getClinicId())
+                .orElseThrow(() -> new RuntimeException("병원이 존재하지 않습니다."));
 
         return UserResponse.of(
                 user.getId(),
                 user.getLoginId(),
                 user.getName(),
                 user.getEmail(),
-                user.getClinicId(),
+                clinicName,
                 user.getRole(),
                 user.getCreatedAt()
         );

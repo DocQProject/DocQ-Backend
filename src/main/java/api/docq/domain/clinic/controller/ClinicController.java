@@ -32,4 +32,16 @@ public class ClinicController {
     ) {
         return ResponseEntity.ok(clinicService.createClinic(authUser.getUserId(), request));
     }
+
+    /**
+     * 병원 생성
+     */
+    @PreAuthorize("hasAnyRole('DOCTOR')")
+    @PostMapping
+    public ResponseEntity<ClinicRespone> createClinic(
+            @AuthenticationPrincipal AuthUser authUser,
+            @Valid @RequestBody ClinicCreateRequest request
+    ) {
+        return ResponseEntity.ok(clinicService.createClinic(authUser.getUserId(), request));
+    }
 }
