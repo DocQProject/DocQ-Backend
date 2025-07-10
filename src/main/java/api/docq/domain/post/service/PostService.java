@@ -1,6 +1,9 @@
 package api.docq.domain.post.service;
 
 import api.docq.common.dto.AuthUser;
+import api.docq.common.image.entity.Image;
+import api.docq.common.image.enums.ReferenceType;
+import api.docq.common.image.repository.ImageRepository;
 import api.docq.domain.comment.dto.response.CommentResponse;
 import api.docq.domain.comment.entity.Comment;
 import api.docq.domain.comment.service.CommentService;
@@ -24,6 +27,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final CommentService commentService;
+    private final ImageRepository imageRepository;
 
     @Transactional
     public PostResponse createPost(AuthUser authUser, PostRequest request) {
@@ -35,6 +39,9 @@ public class PostService {
                 request.getContent()
         );
 
+        List<String> imageURLs = getImageUrls(post.getId());
+
+
         return PostResponse.of(
                 post.getTitle(),
                 post.getContent(),
@@ -42,8 +49,9 @@ public class PostService {
                 post.getViewCount(),
                 post.getCreatedAt(),
                 post.getUpdatedAt(),
-                Collections.emptyList()
-        );
+                Collections.emptyList(),
+                imageURLs
+                );
     }
 
     @Transactional
@@ -55,6 +63,8 @@ public class PostService {
 
         List<CommentResponse> comments = commentService.getCommentResponseList(post);
 
+        List<String> imageURLs = getImageUrls(post.getId());
+
         return PostResponse.of(
                 post.getTitle(),
                 post.getContent(),
@@ -62,21 +72,24 @@ public class PostService {
                 post.getViewCount(),
                 post.getCreatedAt(),
                 post.getUpdatedAt(),
-                comments
+                comments,
+                imageURLs
         );
     }
+
 
     @Transactional(readOnly = true)
     public Page<PostListResponse> getPosts(Pageable pageable) {
 
         Page<Post> posts = postRepository.findAllNotDeleted(pageable);
 
-        return posts.map(post -> PostListResponse.of(
-                        post.getTitle(),
-                        post.getAuthor(),
-                        post.getViewCount(),
-                        post.getCreatedAt()
-                ));
+        return posts.map(
+                post -> PostListResponse.of(
+                post.getTitle(),
+                post.getAuthor(),
+                post.getViewCount(),
+                post.getCreatedAt()
+        ));
     }
 
 
@@ -91,6 +104,8 @@ public class PostService {
 
         List<CommentResponse> comments = commentService.getCommentResponseList(post);
 
+        List<String> imageURLs = getImageUrls(postId);
+
         return PostResponse.of(
                 post.getTitle(),
                 post.getContent(),
@@ -98,7 +113,8 @@ public class PostService {
                 post.getViewCount(),
                 post.getCreatedAt(),
                 post.getUpdatedAt(),
-                comments
+                comments,
+                imageURLs
         );
     }
 
@@ -123,6 +139,13 @@ public class PostService {
         if (!isAdmin && !isAuthor) {
             throw new RuntimeException();
         }
+    }
+
+    private List<String> getImageUrls(Long postId) {
+        List<Image> images = imageRepository.findByReferenceIdAndReferenceType(postId, ReferenceType.POST);
+        return images.stream()
+                .map(Image::getImageUrl)
+                .toList();
     }
 
 }

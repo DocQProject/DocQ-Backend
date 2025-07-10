@@ -24,8 +24,10 @@ public class PostResponse {
 
     private final List<CommentResponse> comments;
 
+    private final List<String> imageURLs;
+
     @Builder
-    private PostResponse(String title, String content, String author, Integer viewCount, LocalDateTime createdAt, LocalDateTime updatedAt, List<CommentResponse> comments) {
+    private PostResponse(String title, String content, String author, Integer viewCount, LocalDateTime createdAt, LocalDateTime updatedAt, List<CommentResponse> comments, List<String> imageURLs) {
         this.title = title;
         this.content = content;
         this.author = author;
@@ -33,9 +35,10 @@ public class PostResponse {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.comments = comments;
+        this.imageURLs = imageURLs;
     }
 
-    public static PostResponse of(String title, String content, String author, Integer viewCount, LocalDateTime createdAt, LocalDateTime updatedAt, List<CommentResponse> comments) {
+    public static PostResponse of(String title, String content, String author, Integer viewCount, LocalDateTime createdAt, LocalDateTime updatedAt, List<CommentResponse> comments, List<String> imageURLs) {
         return PostResponse.builder()
                 .title(title)
                 .content(content)
@@ -44,6 +47,7 @@ public class PostResponse {
                 .createdAt(createdAt)
                 .updatedAt(updatedAt)
                 .comments(comments)
+                .imageURLs(imageURLs)
                 .build();
     }
 
