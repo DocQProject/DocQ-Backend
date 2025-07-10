@@ -1,7 +1,7 @@
 package api.docq.domain.clinic.service;
 
 import api.docq.domain.clinic.dto.request.ClinicCreateRequest;
-import api.docq.domain.clinic.dto.response.ClinicRespone;
+import api.docq.domain.clinic.dto.response.ClinicResponse;
 import api.docq.domain.clinic.entity.Clinic;
 import api.docq.domain.clinic.repository.ClinicRepository;
 import api.docq.domain.user.service.UserService;
@@ -20,7 +20,7 @@ public class ClinicService {
     private final UserService userService;
 
     @Transactional
-    public ClinicRespone createClinic(Long userId, ClinicCreateRequest request) {
+    public ClinicResponse createClinic(Long userId, ClinicCreateRequest request) {
         userService.existsByUserId(userId);
 
         if (clinicRepository.existsByAddress(request.getAddress())) {
@@ -32,53 +32,50 @@ public class ClinicService {
         Clinic clinic = Clinic.of(
                 request.getName(),
                 request.getAddress(),
-                request.getDepartMent(),
+                request.getDepartment(),
                 request.getOpenTime(),
                 request.getCloseTime()
         );
 
         clinicRepository.save(clinic);
 
-        return ClinicRespone.of(
+        return ClinicResponse.of(
                 clinic.getId(),
                 clinic.getName(),
                 clinic.getAddress(),
-                clinic.getDepartMent(),
+                clinic.getDepartment(),
                 clinic.getOpenTime(),
                 clinic.getCloseTime(),
-                clinic.isDeleted(),
                 clinic.getCreatedAt()
         );
     }
 
     @Transactional(readOnly = true)
-    public ClinicRespone findClinic(Long clinicId) {
+    public ClinicResponse findClinic(Long clinicId) {
         Clinic clinic = clinicRepository.findById(clinicId)
                 .orElseThrow(() -> new RuntimeException("병원이 존재하지 않습니다."));
 
-        return ClinicRespone.of(
+        return ClinicResponse.of(
                 clinic.getId(),
                 clinic.getName(),
                 clinic.getAddress(),
-                clinic.getDepartMent(),
+                clinic.getDepartment(),
                 clinic.getOpenTime(),
                 clinic.getCloseTime(),
-                clinic.isDeleted(),
                 clinic.getCreatedAt()
         );
     }
 
     @Transactional(readOnly = true)
-    public Page<ClinicRespone> getClinic(Pageable pageable) {
+    public Page<ClinicResponse> getClinic(Pageable pageable) {
         return clinicRepository.findAllIsNotDeleted(pageable)
-                .map(clinic -> ClinicRespone.of(
+                .map(clinic -> ClinicResponse.of(
                         clinic.getId(),
                         clinic.getName(),
                         clinic.getAddress(),
-                        clinic.getDepartMent(),
+                        clinic.getDepartment(),
                         clinic.getOpenTime(),
                         clinic.getCloseTime(),
-                        clinic.isDeleted(),
                         clinic.getCreatedAt())
                 );
     }

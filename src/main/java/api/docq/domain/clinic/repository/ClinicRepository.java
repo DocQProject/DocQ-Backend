@@ -12,9 +12,9 @@ import java.util.Optional;
 public interface ClinicRepository extends JpaRepository<Clinic, Long> {
     boolean existsByAddress(String address);
 
-    @Query("SELECT c.name FROM Clinic c WHERE c.isDeleted IS NOT true AND c.id= :clinicId")
+    @Query("SELECT c.name FROM Clinic c WHERE c.id= :clinicId")
     Optional<String> findClinicNameById(@Param("clinicId") Long clinicId);
 
-    @Query("SELECT c FROM Clinic c WHERE c.isDeleted IS NOT true")
+    @Query("SELECT c FROM Clinic c")
     Page<Clinic> findAllIsNotDeleted(Pageable pageable);
 }

@@ -36,7 +36,7 @@ public class UserController {
     }
 
     /**
-     * 유저 조회하기 (본인용)
+     * 유저 조회하기 (본인용 - 일반 유저)
      */
     @GetMapping("/me")
     public ResponseEntity<UserResponse> getUser(
