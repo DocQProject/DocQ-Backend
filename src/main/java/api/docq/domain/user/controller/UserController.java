@@ -31,7 +31,7 @@ public class UserController {
             @AuthenticationPrincipal AuthUser authUser,
             @Valid @RequestBody UserUpdatePasswordRequest request
     ) {
-        userService.updatePassword(authUser.getLoginId(), request);
+        userService.updatePassword(authUser.getUserId(), request);
         return ResponseEntity.ok().build();
     }
 
@@ -42,7 +42,7 @@ public class UserController {
     public ResponseEntity<UserResponse> getUser(
             @AuthenticationPrincipal AuthUser authUser
     ) {
-        return ResponseEntity.ok(userService.findUser(authUser.getLoginId()));
+        return ResponseEntity.ok(userService.findUser(authUser.getUserId()));
     }
 
     /**
@@ -64,7 +64,7 @@ public class UserController {
             @AuthenticationPrincipal AuthUser authUser,
             @Valid @RequestBody UserUpdateProfileRequest request
     ) {
-        userService.updateProfile(authUser.getLoginId(), request);
+        userService.updateProfile(authUser.getUserId(), request);
         return ResponseEntity.ok().build();
     }
 
@@ -77,7 +77,7 @@ public class UserController {
             @AuthenticationPrincipal AuthUser authUser,
             @PathVariable Long clinicId
     ) {
-        userService.updateClinic(authUser.getLoginId(), clinicId);
+        userService.updateClinic(authUser.getUserId(), clinicId);
         return ResponseEntity.ok().build();
     }
 
@@ -89,7 +89,7 @@ public class UserController {
             @AuthenticationPrincipal AuthUser authUser,
             @Valid @RequestBody UserDeleteRequest request
     ) {
-        userService.deleteUser(authUser.getLoginId(), request);
+        userService.deleteUser(authUser.getUserId(), request);
         return ResponseEntity.ok().build();
     }
 }

@@ -57,8 +57,8 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    public SignInResponse signIn(@Valid SignInRequest signInRequest) {
-        User user = userRepository.findByLoginId(signInRequest.getLoginId())
+    public SignInResponse signIn(SignInRequest signInRequest) {
+        User user = (User) userRepository.findByLoginId(signInRequest.getLoginId())
                 .orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다."));
 
         if (!passwordEncoder.matches(signInRequest.getPassword(), user.getPassword())) {
