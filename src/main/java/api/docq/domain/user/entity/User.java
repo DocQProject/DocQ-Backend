@@ -39,8 +39,8 @@ public class User extends TimeStamped {
     private boolean isDeleted;
 
     @Builder
-    private User(Long clinicId, String loginId, String name, String email, String password, UserRole role) {
-        this.clinicId = clinicId;
+    private User(String loginId, String name, String email, String password, UserRole role) {
+        this.clinicId = null;
         this.loginId = loginId;
         this.name = name;
         this.email = email;
@@ -49,9 +49,8 @@ public class User extends TimeStamped {
         this.isDeleted = false;
     }
 
-    public static User of(Long clinicId, String loginId, String name, String email, String password, UserRole role) {
+    public static User of(String loginId, String name, String email, String password, UserRole role) {
         return User.builder()
-                .clinicId(clinicId)
                 .loginId(loginId)
                 .name(name)
                 .email(email)

@@ -12,28 +12,28 @@ public class UserResponse {
     private final String loginId;
     private final String name;
     private final String email;
-    private final Long clinicId;
+    private final String clinicName;
     private final UserRole role;
     private final LocalDateTime createdAt;
 
     @Builder
-    private UserResponse(Long userId, String loginId, String name, String email, Long clinicId, UserRole role, LocalDateTime createdAt) {
+    private UserResponse(Long userId, String loginId, String name, String email, String clinicName, UserRole role, LocalDateTime createdAt) {
         this.userId = userId;
         this.loginId = loginId;
         this.name = name;
         this.email = email;
-        this.clinicId = clinicId;
+        this.clinicName = clinicName;
         this.role = role;
         this.createdAt = createdAt;
     }
 
-    public static UserResponse of(Long userId, String loginId, String name, String email, Long clinicId, UserRole role, LocalDateTime createdAt) {
+    public static UserResponse of(Long userId, String loginId, String name, String email, String clinicName, UserRole role, LocalDateTime createdAt) {
         return UserResponse.builder()
                 .userId(userId)
                 .loginId(loginId)
                 .name(name)
                 .email(email)
-                .clinicId(clinicId)
+                .clinicName(clinicName)
                 .role(role)
                 .createdAt(createdAt)
                 .build();

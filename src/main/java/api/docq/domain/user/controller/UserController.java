@@ -31,18 +31,18 @@ public class UserController {
             @AuthenticationPrincipal AuthUser authUser,
             @Valid @RequestBody UserUpdatePasswordRequest request
     ) {
-        userService.updatePassword(authUser.getLoginId(), request);
+        userService.updatePassword(authUser.getUserId(), request);
         return ResponseEntity.ok().build();
     }
 
     /**
-     * 유저 조회하기 (본인용)
+     * 유저 조회하기 (본인용 - 일반 유저)
      */
     @GetMapping("/me")
     public ResponseEntity<UserResponse> getUser(
             @AuthenticationPrincipal AuthUser authUser
     ) {
-        return ResponseEntity.ok(userService.findUser(authUser.getLoginId()));
+        return ResponseEntity.ok(userService.findUser(authUser.getUserId()));
     }
 
     /**
@@ -64,7 +64,7 @@ public class UserController {
             @AuthenticationPrincipal AuthUser authUser,
             @Valid @RequestBody UserUpdateProfileRequest request
     ) {
-        userService.updateProfile(authUser.getLoginId(), request);
+        userService.updateProfile(authUser.getUserId(), request);
         return ResponseEntity.ok().build();
     }
 
@@ -72,12 +72,12 @@ public class UserController {
      * 유저 병원 변경하기
      */
     @PreAuthorize("hasAnyRole('DOCTOR')")
-    @PatchMapping("/clinics/{clinicIc}")
+    @PatchMapping("/clinics/{clinicId}")
     public ResponseEntity<Void> updateClinic(
             @AuthenticationPrincipal AuthUser authUser,
             @PathVariable Long clinicId
     ) {
-        userService.updateClinic(authUser.getLoginId(), clinicId);
+        userService.updateClinic(authUser.getUserId(), clinicId);
         return ResponseEntity.ok().build();
     }
 
@@ -89,7 +89,7 @@ public class UserController {
             @AuthenticationPrincipal AuthUser authUser,
             @Valid @RequestBody UserDeleteRequest request
     ) {
-        userService.deleteUser(authUser.getLoginId(), request);
+        userService.deleteUser(authUser.getUserId(), request);
         return ResponseEntity.ok().build();
     }
 }
