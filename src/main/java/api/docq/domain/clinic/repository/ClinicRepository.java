@@ -17,4 +17,5 @@ public interface ClinicRepository extends JpaRepository<Clinic, Long> {
 
     @Query("SELECT c FROM Clinic c")
     Page<Clinic> findAllIsNotDeleted(Pageable pageable);
+
 }
