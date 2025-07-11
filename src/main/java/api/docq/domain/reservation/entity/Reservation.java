@@ -29,12 +29,16 @@ public class Reservation extends TimeStamped {
     @Column(nullable = false)
     private String message;
 
+    @Column(nullable = false)
+    private boolean isDeleted;
+
     @Builder
     private Reservation (Long clinicId, Long userId, LocalTime time, String message) {
         this.clinicId = clinicId;
         this.userId = userId;
         this.time = time;
         this.message = message;
+        this.isDeleted = false;
     }
 
     public static Reservation of(Long clinicId, Long userId, LocalTime time, String message) {
