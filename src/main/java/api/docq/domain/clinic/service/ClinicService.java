@@ -10,7 +10,6 @@ import api.docq.domain.review.dto.response.ReviewResponse;
 import api.docq.domain.review.entity.Review;
 import api.docq.domain.review.repository.ReviewRepository;
 import api.docq.domain.review.service.ReviewService;
-import api.docq.domain.user.repository.UserRepository;
 import api.docq.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,7 +27,6 @@ public class ClinicService {
     private final ReviewRepository reviewRepository;
     private final UserService userService;
     private final ReviewService reviewService;
-    private final UserRepository userRepository;
 
     @Transactional
     public ClinicCreateRespone createClinic(Long userId, ClinicCreateRequest request) {
@@ -103,8 +101,8 @@ public class ClinicService {
                         clinic.getAddress(),
                         clinic.getDepartment(),
                         clinic.getOpenTime(),
-                        clinic.getCloseTime(),
-                        clinic.getCreatedAt())
+                        clinic.getCloseTime()
+                        )
                 );
     }
 
