@@ -40,4 +40,17 @@ public class ReviewController {
     ) {
         return ResponseEntity.ok(reviewService.updateReview(authUser.getUserId(), authUser.getName(), request, reviewId));
     }
+
+    /**
+     *  리뷰 삭제
+     */
+    @DeleteMapping("/reviews/{reviewId}")
+    public ResponseEntity<Void> deleteReview(
+            @AuthenticationPrincipal AuthUser authUser,
+            @PathVariable Long reviewId
+
+    ) {
+        reviewService.deleteReview(authUser.getUserId(), reviewId);
+        return ResponseEntity.ok().build();
+    }
 }
