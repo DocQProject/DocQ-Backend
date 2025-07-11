@@ -24,5 +24,5 @@ public interface ClinicRepository extends JpaRepository<Clinic, Long> {
             "WHERE c.name LIKE CONCAT('%', :query, '%') " +
             "OR c.address LIKE CONCAT('%', :query, '%') " +
             "OR (:department IS NOT NULL AND c.department = :department) ")
-    List<Clinic> searchByQuery(@Param("query") String query, @Param("department") Department department);
+    Page<Clinic> searchByQuery(@Param("query") String query, @Param("department") Department department, Pageable pageable);
 }
