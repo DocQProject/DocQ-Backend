@@ -8,6 +8,7 @@ import api.docq.domain.user.dto.request.UserUpdateProfileRequest;
 import api.docq.domain.user.dto.response.UserGetResponse;
 import api.docq.domain.user.dto.response.UserResponse;
 import api.docq.domain.user.entity.User;
+import api.docq.domain.user.enums.UserRole;
 import api.docq.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -63,8 +64,20 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserResponse findUser(Long userId) {
         User user = findUserByUserIdOrElseThrow(userId);
-        String clinicName = clinicRepository.findClinicNameById(user.getClinicId())
-                .orElseThrow(() -> new RuntimeException("병원이 존재하지 않습니다."));
+        String clinicName = "";
+
+        if (UserRole.ROLE_DOCTOR.equals(user.getRole())) {
+
+            if (user.getClinicId() != null) {
+                Clinic clinic = clinicRepository.findById(user.getClinicId())
+                        .orElseThrow(() -> new RuntimeException("병원을 찾을 수 없습니다."));
+
+                clinicName = clinic.getName();
+            } else {
+
+                clinicName = null;
+            }
+        }
 
         return UserResponse.of(
                 user.getId(),

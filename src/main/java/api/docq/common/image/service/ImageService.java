@@ -11,7 +11,6 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-import software.amazon.awssdk.services.s3.model.S3Exception;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -70,6 +69,11 @@ public class ImageService {
                         .key(key)
                         .build()
         );
+
+        Image image = imageRepository.findByImageUrl(imageUrl)
+                .orElseThrow(() -> new RuntimeException());
+
+        imageRepository.delete(image);
     }
 
     private String extractKeyFromUrl(String imageUrl) {

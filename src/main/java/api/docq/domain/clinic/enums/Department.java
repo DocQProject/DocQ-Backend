@@ -8,11 +8,11 @@ import lombok.RequiredArgsConstructor;
  */
 @Getter
 @RequiredArgsConstructor
-public enum DepartMent {
+public enum Department {
     DENTAL("치과"),
     EYE_CLINIC("안과"),
     ENT("이비인후과"),
     DERMATOLOGY("피부과");
 
-    private final String departMentName;
+    private final String departmentName;
 }

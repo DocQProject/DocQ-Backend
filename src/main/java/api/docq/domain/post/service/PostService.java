@@ -39,7 +39,7 @@ public class PostService {
                 request.getContent()
         );
 
-        List<String> imageURLs = getImageUrls(post);
+        List<String> imageURLs = getImageUrls(post.getId());
 
 
         return PostResponse.of(
@@ -63,7 +63,7 @@ public class PostService {
 
         List<CommentResponse> comments = commentService.getCommentResponseList(post);
 
-        List<String> imageURLs = getImageUrls(post);
+        List<String> imageURLs = getImageUrls(post.getId());
 
         return PostResponse.of(
                 post.getTitle(),
@@ -104,7 +104,7 @@ public class PostService {
 
         List<CommentResponse> comments = commentService.getCommentResponseList(post);
 
-        List<String> imageURLs = getImageUrls(post);
+        List<String> imageURLs = getImageUrls(postId);
 
         return PostResponse.of(
                 post.getTitle(),
@@ -141,8 +141,8 @@ public class PostService {
         }
     }
 
-    private List<String> getImageUrls(Post post) {
-        List<Image> images = imageRepository.findByReferenceIdAndReferenceType(post.getId(), ReferenceType.POST);
+    private List<String> getImageUrls(Long postId) {
+        List<Image> images = imageRepository.findByReferenceIdAndReferenceType(postId, ReferenceType.POST);
         return images.stream()
                 .map(Image::getImageUrl)
                 .toList();

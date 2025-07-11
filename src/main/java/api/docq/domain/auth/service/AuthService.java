@@ -13,8 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static api.docq.domain.user.enums.UserRole.ROLE_USER;
-
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -34,18 +32,9 @@ public class AuthService {
             throw new RuntimeException("비밀번호가 일치하지 않습니다.");
         }
 
-        if (ROLE_USER.equals(signUpRequest.getRole()) && signUpRequest.getClinicId() != null) {
-            throw new RuntimeException("병원 정보는 의사만 가질 수 있는 필드입니다.");
-        }
-
-        if (!clinicRepository.existsById(signUpRequest.getClinicId()) && signUpRequest.getClinicId() != null) {
-            throw new RuntimeException("병원이 존재하지 않습니다.");
-        }
-
         String encodePassword = passwordEncoder.encode(signUpRequest.getPassword());
 
         User user = User.of(
-                signUpRequest.getClinicId(),
                 signUpRequest.getLoginId(),
                 signUpRequest.getName(),
                 signUpRequest.getEmail(),

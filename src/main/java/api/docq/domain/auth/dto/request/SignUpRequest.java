@@ -31,6 +31,4 @@ public class SignUpRequest {
 
     @NotNull(message = "권한은 필수 입력값입니다.")
     private final UserRole role;
-
-    private final Long clinicId;
 }

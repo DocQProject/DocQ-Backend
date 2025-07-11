@@ -1,7 +1,7 @@
 package api.docq.domain.clinic.entity;
 
 import api.docq.common.entity.TimeStamped;
-import api.docq.domain.clinic.enums.DepartMent;
+import api.docq.domain.clinic.enums.Department;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,29 +26,26 @@ public class Clinic extends TimeStamped {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private DepartMent departMent;
+    private Department department;
 
     private LocalTime openTime;
 
     private LocalTime closeTime;
 
-    private boolean isDeleted;
-
     @Builder()
-    private Clinic (String name, String address, DepartMent departMent, LocalTime openTime, LocalTime closeTime) {
+    private Clinic (String name, String address, Department department, LocalTime openTime, LocalTime closeTime) {
         this.name = name;
         this.address = address;
-        this.departMent =departMent;
+        this.department =department;
         this.openTime = openTime;
         this.closeTime = closeTime;
-        this.isDeleted = false;
     }
 
-    public static Clinic of(String name,String address, DepartMent departMent, LocalTime openTime, LocalTime closeTime) {
+    public static Clinic of(String name, String address, Department department, LocalTime openTime, LocalTime closeTime) {
         return Clinic.builder()
                 .name(name)
                 .address(address)
-                .departMent(departMent)
+                .department(department)
                 .openTime(openTime)
                 .closeTime(closeTime)
                 .build();

@@ -1,6 +1,6 @@
 package api.docq.domain.clinic.dto.request;
 
-import api.docq.domain.clinic.enums.DepartMent;
+import api.docq.domain.clinic.enums.Department;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -18,7 +18,7 @@ public class ClinicCreateRequest {
     private final String address;
 
     @NotNull(message = "진료과를 입력해주세요.")
-    private final DepartMent departMent;
+    private final Department department;
 
     private final LocalTime openTime;
 
