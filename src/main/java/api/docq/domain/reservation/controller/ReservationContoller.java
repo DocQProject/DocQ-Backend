@@ -4,6 +4,7 @@ import api.docq.common.dto.AuthUser;
 import api.docq.domain.reservation.dto.request.ReservationRequest;
 import api.docq.domain.reservation.dto.response.ReservationDoctorResponse;
 import api.docq.domain.reservation.dto.response.ReservationResponse;
+import api.docq.domain.reservation.dto.response.ReservationUserResponse;
 import api.docq.domain.reservation.service.ReservationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +40,7 @@ public class ReservationContoller {
      */
     @PreAuthorize("hasAnyRole('USER')")
     @GetMapping("/reservations/me")
-    public ResponseEntity<Page<ReservationResponse>> getReservations(
+    public ResponseEntity<Page<ReservationUserResponse>> getReservations(
             @AuthenticationPrincipal AuthUser authUser,
             Pageable pageable
     ) {

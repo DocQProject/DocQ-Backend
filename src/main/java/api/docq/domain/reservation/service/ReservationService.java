@@ -5,6 +5,7 @@ import api.docq.domain.clinic.repository.ClinicRepository;
 import api.docq.domain.reservation.dto.request.ReservationRequest;
 import api.docq.domain.reservation.dto.response.ReservationDoctorResponse;
 import api.docq.domain.reservation.dto.response.ReservationResponse;
+import api.docq.domain.reservation.dto.response.ReservationUserResponse;
 import api.docq.domain.reservation.entity.Reservation;
 import api.docq.domain.reservation.repository.ReservationRepository;
 import api.docq.domain.user.entity.User;
@@ -64,7 +65,7 @@ public class ReservationService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ReservationResponse> getReservations(Long userId, Pageable pageable) {
+    public Page<ReservationUserResponse> getReservations(Long userId, Pageable pageable) {
         User user = userService.findUserByUserIdOrElseThrow(userId);
         Page<Reservation> reservations = reservationRepository.findAllByUserId(userId, pageable);
 
@@ -79,13 +80,14 @@ public class ReservationService {
         return reservations.map(reservation -> {
             Clinic clinic = clinicMap.get(reservation.getClinicId());
 
-            return ReservationResponse.of(
+            return ReservationUserResponse.of(
                     reservation.getId(),
                     user.getName(),
                     clinic.getName(),
                     reservation.getTime(),
                     reservation.getMessage(),
-                    reservation.getCreatedAt()
+                    reservation.getCreatedAt(),
+                    reservation.isDeleted()
             );
         });
     }
