@@ -21,20 +21,17 @@ public class ClinicGetAllResponse {
 
     private final LocalTime closeTime;
 
-    private final LocalDateTime createdAt;
-
     @Builder
-    private ClinicGetAllResponse(Long clinicId, String name, String address, Department department, LocalTime openTime, LocalTime closeTime, LocalDateTime createdAt) {
+    private ClinicGetAllResponse(Long clinicId, String name, String address, Department department, LocalTime openTime, LocalTime closeTime) {
         this.clinicId = clinicId;
         this.name = name;
         this.address = address;
         this.department = department;
         this.openTime = openTime;
         this.closeTime = closeTime;
-        this.createdAt = createdAt;
     }
 
-    public static ClinicGetAllResponse of(Long clinicId, String name, String address, Department department, LocalTime openTime, LocalTime closeTime, LocalDateTime createdAt) {
+    public static ClinicGetAllResponse of(Long clinicId, String name, String address, Department department, LocalTime openTime, LocalTime closeTime) {
         return ClinicGetAllResponse.builder()
                 .clinicId(clinicId)
                 .name(name)
@@ -42,7 +39,6 @@ public class ClinicGetAllResponse {
                 .department(department)
                 .openTime(openTime)
                 .closeTime(closeTime)
-                .createdAt(createdAt)
                 .build();
     }
 }
