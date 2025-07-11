@@ -16,7 +16,7 @@ public class ClinicSearchService {
 
     private final ClinicRepository clinicRepository;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<ClinicSearchResponse> searchClinic(String query) {
         Department department = Department.fromName(query);
         List<Clinic> result = clinicRepository.searchByQuery(query, department);
