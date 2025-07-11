@@ -49,4 +49,8 @@ public class Reservation extends TimeStamped {
                 .message(message)
                 .build();
     }
+
+    public void delete() {
+        this.isDeleted = true;
+    }
 }

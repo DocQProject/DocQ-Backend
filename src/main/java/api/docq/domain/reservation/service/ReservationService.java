@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,7 @@ public class ReservationService {
     private final ClinicRepository clinicRepository;
     private final UserRepository userRepository;
 
+    @Transactional
     public ReservationResponse createReservation(Long userId,String userName, Long clinicId, ReservationRequest request) {
         userService.existsByUserId(userId);
         Clinic clinic = clinicRepository.findById(clinicId)
@@ -61,6 +63,7 @@ public class ReservationService {
                 );
     }
 
+    @Transactional(readOnly = true)
     public Page<ReservationResponse> getReservations(Long userId, Pageable pageable) {
         User user = userService.findUserByUserIdOrElseThrow(userId);
         Page<Reservation> reservations = reservationRepository.findAllByUserId(userId, pageable);
@@ -87,6 +90,7 @@ public class ReservationService {
         });
     }
 
+    @Transactional(readOnly = true)
     public Page<ReservationDoctorResponse> getReservationsByDoctor(Long userId, Pageable pageable) {
         User user = userService.findUserByUserIdOrElseThrow(userId);
 
@@ -115,5 +119,13 @@ public class ReservationService {
                     reservation.getCreatedAt()
             );
         });
+    }
+
+    @Transactional
+    public void deleteReservations(Long userId, Long reservationId) {
+        userService.existsByUserId(userId);
+
+        Reservation reservation = reservationRepository.findByUserIdAndReservationId(userId, reservationId);
+        reservation.delete();
     }
 }

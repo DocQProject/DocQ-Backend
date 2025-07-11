@@ -57,4 +57,17 @@ public class ReservationContoller {
     ) {
         return ResponseEntity.ok(reservationService.getReservationsByDoctor(authUser.getUserId(), pageable));
     }
+
+    /**
+     * 예약 삭제
+     */
+    @PreAuthorize("hasAnyRole('USER')")
+    @DeleteMapping("/reservations/{reservationId}")
+    public ResponseEntity<Void> deleteReservation(
+            @AuthenticationPrincipal AuthUser authUser,
+            @PathVariable Long reservationId
+    ) {
+        reservationService.deleteReservations(authUser.getUserId(), reservationId);
+        return ResponseEntity.ok().build();
+    }
 }

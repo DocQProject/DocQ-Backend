@@ -17,6 +17,9 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     @Query("SELECT r FROM Reservation r WHERE r.userId = :userId")
     Page<Reservation> findAllByUserId(@Param("userId") Long userId, Pageable pageable);
 
-    @Query("SELECT r FROM Reservation r WHERE r.clinicId = :clinicId")
+    @Query("SELECT r FROM Reservation r WHERE r.isDeleted IS NOT true AND r.clinicId = :clinicId")
     Page<Reservation> findAllByClinicId(@Param("clinicId") Long clinicId, Pageable pageable);
+
+    @Query("SELECT r FROM Reservation r WHERE r.isDeleted IS NOT true AND r.userId = :userId AND r.id = :reservationId")
+    Reservation findByUserIdAndReservationId(@Param("userId") Long userId, @Param("reservationId") Long reservationId);
 }
