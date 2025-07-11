@@ -19,7 +19,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class ImageService {
+public class    ImageService {
 
     private final ImageRepository imageRepository;
 
