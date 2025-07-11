@@ -20,22 +20,26 @@ public class Review extends TimeStamped {
 
     private Long clinicId;
 
+    private String author;
+
     private String content;
 
     private Integer starPoint;
 
     @Builder
-    private Review(Long userId, Long clinicId, String content, Integer starPoint) {
+    private Review(Long userId, Long clinicId,String author, String content, Integer starPoint) {
         this.userId = userId;
         this.clinicId = clinicId;
+        this.author = author;
         this.content = content;
         this.starPoint = starPoint;
     }
 
-    public static Review of(Long userId, Long clinicId, String content, Integer starPoint) {
+    public static Review of(Long userId, Long clinicId,String author, String content, Integer starPoint) {
         return Review.builder()
                 .userId(userId)
                 .clinicId(clinicId)
+                .author(author)
                 .content(content)
                 .starPoint(starPoint)
                 .build();

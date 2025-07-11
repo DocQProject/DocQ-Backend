@@ -29,6 +29,7 @@ public class ReviewService {
                 authUser.getUserId(),
                 clinicId,
                 request.getContent(),
+                authUser.getName(),
                 request.getStarPoint()
         );
 

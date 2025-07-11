@@ -10,7 +10,6 @@ import api.docq.domain.review.dto.response.ReviewResponse;
 import api.docq.domain.review.entity.Review;
 import api.docq.domain.review.repository.ReviewRepository;
 import api.docq.domain.review.service.ReviewService;
-import api.docq.domain.user.entity.User;
 import api.docq.domain.user.repository.UserRepository;
 import api.docq.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -20,10 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalTime;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -72,24 +68,19 @@ public class ClinicService {
 
         Page<Review> reviews = reviewRepository.findAllByClinicId(clinicId, pageable);
 
-        Set<Long> userIds = reviews.stream()
-                .map(Review::getUserId)
-                .collect(Collectors.toSet());
+        Page<ReviewResponse> reviewResponses = reviews
+                .map(review -> {
 
-        Map<Long, User> users = userRepository.findAllById(userIds).stream()
-                .collect(Collectors.toMap(User::getId, Function.identity()));
+                    List<String> imageUrls = reviewService.getImageUrls(review.getId());
 
-        Page<ReviewResponse> reviewResponses = reviews.map(review -> {
-            User user = users.get(review.getUserId());
-
-            return ReviewResponse.of(
-                    user != null ? user.getName() : "알 수 없음",  // null 체크는 방어적으로
-                    review.getContent(),
-                    review.getStarPoint(),
-                    reviewService.getImageUrls(review.getId()),
-                    review.getCreatedAt()
-            );
-        });
+                    return ReviewResponse.of(
+                            review.getAuthor(),
+                            review.getContent(),
+                            review.getStarPoint(),
+                            imageUrls,
+                            review.getCreatedAt()
+                    );
+                });
 
         return ClinicGetResponse.of(
                 clinic.getId(),
