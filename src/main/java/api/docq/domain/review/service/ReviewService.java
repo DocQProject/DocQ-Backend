@@ -46,11 +46,15 @@ public class ReviewService {
 
 
     @Transactional
-    public ReviewResponse updateReview(String userName, ReviewRequest request, Long reviewId) {
+    public ReviewResponse updateReview(Long userId, String userName, ReviewRequest request, Long reviewId) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new RuntimeException("리뷰가 존재하지 않습니다."));
 
-        review.updateContentAndStar(request.getContent(), review.getStarPoint());
+        if (!userId.equals(review.getUserId())) {
+            throw new RuntimeException("해당 리뷰를 작성한 사용자가 아닙니다.");
+        }
+
+        review.updateContentAndStar(request.getContent(), request.getStarPoint());
         List<String> imageUrls = getImageUrls(review.getId());
 
         return ReviewResponse.of(
@@ -62,7 +66,7 @@ public class ReviewService {
         ) ;
     }
 
-    private List<String> getImageUrls(Long reviewId) {
+    public List<String> getImageUrls(Long reviewId) {
         List<Image> images = imageRepository.findByReferenceIdAndReferenceType(reviewId, ReferenceType.REVIEW);
         return images.stream()
                 .map(Image::getImageUrl)

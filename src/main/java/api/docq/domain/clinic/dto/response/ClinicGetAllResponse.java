@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Getter
-public class ClinicResponse {
+public class ClinicGetAllResponse {
     private final Long clinicId;
 
     private final String name;
@@ -24,7 +24,7 @@ public class ClinicResponse {
     private final LocalDateTime createdAt;
 
     @Builder
-    private ClinicResponse(Long clinicId, String name, String address, Department department, LocalTime openTime, LocalTime closeTime, LocalDateTime createdAt) {
+    private ClinicGetAllResponse(Long clinicId, String name, String address, Department department, LocalTime openTime, LocalTime closeTime, LocalDateTime createdAt) {
         this.clinicId = clinicId;
         this.name = name;
         this.address = address;
@@ -34,8 +34,8 @@ public class ClinicResponse {
         this.createdAt = createdAt;
     }
 
-    public static ClinicResponse of(Long clinicId, String name, String address, Department department, LocalTime openTime, LocalTime closeTime, LocalDateTime createdAt) {
-        return ClinicResponse.builder()
+    public static ClinicGetAllResponse of(Long clinicId, String name, String address, Department department, LocalTime openTime, LocalTime closeTime, LocalDateTime createdAt) {
+        return ClinicGetAllResponse.builder()
                 .clinicId(clinicId)
                 .name(name)
                 .address(address)

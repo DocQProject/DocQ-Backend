@@ -38,6 +38,6 @@ public class ReviewController {
             @Valid @RequestBody ReviewRequest request,
             @PathVariable Long reviewId
     ) {
-        return ResponseEntity.ok(reviewService.updateReview(authUser.getName(), request, reviewId));
+        return ResponseEntity.ok(reviewService.updateReview(authUser.getUserId(), authUser.getName(), request, reviewId));
     }
 }

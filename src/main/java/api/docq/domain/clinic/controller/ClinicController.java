@@ -2,7 +2,9 @@ package api.docq.domain.clinic.controller;
 
 import api.docq.common.dto.AuthUser;
 import api.docq.domain.clinic.dto.request.ClinicCreateRequest;
-import api.docq.domain.clinic.dto.response.ClinicResponse;
+import api.docq.domain.clinic.dto.response.ClinicCreateRespone;
+import api.docq.domain.clinic.dto.response.ClinicGetAllResponse;
+import api.docq.domain.clinic.dto.response.ClinicGetResponse;
 import api.docq.domain.clinic.service.ClinicService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +27,7 @@ public class ClinicController {
      */
     @PreAuthorize("hasAnyRole('DOCTOR')")
     @PostMapping
-    public ResponseEntity<ClinicResponse> createClinic(
+    public ResponseEntity<ClinicCreateRespone> createClinic(
             @AuthenticationPrincipal AuthUser authUser,
             @Valid @RequestBody ClinicCreateRequest request
     ) {
@@ -36,17 +38,18 @@ public class ClinicController {
      * 병원 단건 조회
      */
     @GetMapping("/{clinicId}")
-    public ResponseEntity<ClinicResponse> findClinic(
-            @PathVariable Long clinicId
+    public ResponseEntity<ClinicGetResponse> findClinic(
+            @PathVariable Long clinicId,
+            Pageable pageable
     ) {
-        return ResponseEntity.ok(clinicService.findClinic(clinicId));
+        return ResponseEntity.ok(clinicService.findClinic(clinicId, pageable));
     }
 
     /**
      * 병원 다건 조회
      */
     @GetMapping
-    public ResponseEntity<Page<ClinicResponse>> getClinic(
+    public ResponseEntity<Page<ClinicGetAllResponse>> getClinic(
             Pageable pageable
     ) {
         return ResponseEntity.ok(clinicService.getClinic(pageable));
