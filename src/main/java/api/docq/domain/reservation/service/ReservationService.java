@@ -2,9 +2,11 @@ package api.docq.domain.reservation.service;
 
 import api.docq.domain.clinic.entity.Clinic;
 import api.docq.domain.clinic.repository.ClinicRepository;
+import api.docq.domain.clinic.service.ClinicService;
 import api.docq.domain.reservation.dto.request.ReservationRequest;
 import api.docq.domain.reservation.dto.response.ReservationDoctorResponse;
 import api.docq.domain.reservation.dto.response.ReservationResponse;
+import api.docq.domain.reservation.dto.response.ReservationTimeRespone;
 import api.docq.domain.reservation.dto.response.ReservationUserResponse;
 import api.docq.domain.reservation.entity.Reservation;
 import api.docq.domain.reservation.repository.ReservationRepository;
@@ -17,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +34,7 @@ public class ReservationService {
     private final UserService userService;
     private final ClinicRepository clinicRepository;
     private final UserRepository userRepository;
+    private final ClinicService clinicService;
 
     @Transactional
     public ReservationResponse createReservation(Long userId,String userName, Long clinicId, ReservationRequest request) {
@@ -47,6 +51,7 @@ public class ReservationService {
         Reservation reservation = Reservation.of(
                 clinicId,
                 userId,
+                request.getDate(),
                 request.getTime(),
                 request.getMessage()
         );
@@ -120,6 +125,21 @@ public class ReservationService {
                     reservation.getCreatedAt()
             );
         });
+    }
+
+    @Transactional(readOnly = true)
+    public ReservationTimeRespone getReservationTime(Long clinicId, LocalDate date) {
+        Clinic clinic = clinicRepository.findById(clinicId)
+                .orElseThrow(() -> new RuntimeException("병원이 존재하지 않습니다."));
+
+        List<LocalTime> timeList = clinicService.timeList(clinic.getOpenTime(), clinic.getCloseTime());
+        List<LocalTime> reservationTimeList = reservationRepository.findAllTimeByClinicIdAndDate(clinicId, date);
+
+        List<LocalTime> availableTimes = timeList.stream()
+                .filter(time -> !reservationTimeList.contains(time))
+                .toList();
+
+        return ReservationTimeRespone.of(availableTimes);
     }
 
     @Transactional

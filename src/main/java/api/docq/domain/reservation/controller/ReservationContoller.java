@@ -4,16 +4,20 @@ import api.docq.common.dto.AuthUser;
 import api.docq.domain.reservation.dto.request.ReservationRequest;
 import api.docq.domain.reservation.dto.response.ReservationDoctorResponse;
 import api.docq.domain.reservation.dto.response.ReservationResponse;
+import api.docq.domain.reservation.dto.response.ReservationTimeRespone;
 import api.docq.domain.reservation.dto.response.ReservationUserResponse;
 import api.docq.domain.reservation.service.ReservationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RestController
 @RequiredArgsConstructor
@@ -57,6 +61,19 @@ public class ReservationContoller {
             Pageable pageable
     ) {
         return ResponseEntity.ok(reservationService.getReservationsByDoctor(authUser.getUserId(), pageable));
+    }
+
+    /**
+     * 예약 가능 시간 조회
+     *
+     * 프론트엔드에서 예약하기 버튼 클릭 시 예약 가능한 시간을 표시하기 위해 호출하는 API
+     */
+    @GetMapping("/clinics/{clinicId}/reservations")
+    public ResponseEntity<ReservationTimeRespone> getReservationTime(
+            @PathVariable Long clinicId,
+            @RequestParam @DateTimeFormat(pattern = "yyyy.MM.dd") LocalDate date
+            ) {
+        return ResponseEntity.ok(reservationService.getReservationTime(clinicId, date));
     }
 
     /**

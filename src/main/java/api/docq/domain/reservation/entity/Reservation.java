@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Getter
@@ -24,6 +25,9 @@ public class Reservation extends TimeStamped {
     private Long userId;
 
     @Column(nullable = false)
+    private LocalDate date;
+
+    @Column(nullable = false)
     private LocalTime time;
 
     @Column(nullable = false)
@@ -33,18 +37,20 @@ public class Reservation extends TimeStamped {
     private boolean isDeleted;
 
     @Builder
-    private Reservation (Long clinicId, Long userId, LocalTime time, String message) {
+    private Reservation (Long clinicId, Long userId, LocalDate date, LocalTime time, String message) {
         this.clinicId = clinicId;
         this.userId = userId;
+        this.date = date;
         this.time = time;
         this.message = message;
         this.isDeleted = false;
     }
 
-    public static Reservation of(Long clinicId, Long userId, LocalTime time, String message) {
+    public static Reservation of(Long clinicId, Long userId, LocalDate date, LocalTime time, String message) {
         return Reservation.builder()
                 .clinicId(clinicId)
                 .userId(userId)
+                .date(date)
                 .time(time)
                 .message(message)
                 .build();
