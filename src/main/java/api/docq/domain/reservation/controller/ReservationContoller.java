@@ -65,8 +65,6 @@ public class ReservationContoller {
 
     /**
      * 예약 가능 시간 조회
-     *
-     * 프론트엔드에서 예약하기 버튼 클릭 시 예약 가능한 시간을 표시하기 위해 호출하는 API
      */
     @GetMapping("/clinics/{clinicId}/reservations")
     public ResponseEntity<ReservationTimeRespone> getReservationTime(
