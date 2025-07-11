@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -37,9 +38,7 @@ public class ReservationService {
         Clinic clinic = clinicRepository.findById(clinicId)
                 .orElseThrow(() -> new RuntimeException("병원이 존재하지 않습니다."));
 
-        if (request.getTime().isBefore(clinic.getOpenTime()) || request.getTime().isAfter(clinic.getCloseTime())) {
-            throw new RuntimeException("예약 시간이 병원 운영 시간 외입니다.");
-        }
+        validReservation(request.getTime(), clinic.getOpenTime(), clinic.getCloseTime());
 
         if (reservationRepository.existsByClinicIdAndTime(clinicId, request.getTime())) {
             throw new RuntimeException("해당 시간에는 이미 예약이 존재합니다.");
@@ -129,5 +128,16 @@ public class ReservationService {
 
         Reservation reservation = reservationRepository.findByUserIdAndReservationId(userId, reservationId);
         reservation.delete();
+    }
+
+    private void validReservation(LocalTime reservationTime, LocalTime openTime, LocalTime closeTime) {
+        int minute = reservationTime.getMinute();
+        if (minute != 0 && minute != 30) {
+            throw new RuntimeException("예약 시간은 30분 단위로 입력해야 합니다.");
+        }
+
+        if (reservationTime.isBefore(openTime) || reservationTime.isAfter(closeTime)) {
+            throw new RuntimeException("예약 시간이 병원 운영 시간 내에 있어야 합니다.");
+        }
     }
 }
