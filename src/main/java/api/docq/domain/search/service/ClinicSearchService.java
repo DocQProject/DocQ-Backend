@@ -10,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ClinicSearchService {
@@ -29,6 +31,20 @@ public class ClinicSearchService {
                         clinic.getOpenTime(),
                         clinic.getCloseTime()
                 ));
+    }
+
+    @Transactional(readOnly = true)
+    public List<ClinicSearchResponse> getClinicsByDepartment(Department department) {
+        List<Clinic> result = clinicRepository.find5RandomClinics(department.name());
+        return result.stream()
+                .map(clinic -> ClinicSearchResponse.of(
+                clinic.getId(),
+                clinic.getName(),
+                clinic.getAddress(),
+                clinic.getDepartment().name(),
+                clinic.getOpenTime(),
+                clinic.getCloseTime()))
+                .toList();
     }
 
 

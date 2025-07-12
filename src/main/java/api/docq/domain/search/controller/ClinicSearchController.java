@@ -1,5 +1,6 @@
 package api.docq.domain.search.controller;
 
+import api.docq.domain.clinic.enums.Department;
 import api.docq.domain.search.dto.response.ClinicSearchResponse;
 import api.docq.domain.search.service.ClinicSearchService;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/search")
@@ -23,5 +26,12 @@ public class ClinicSearchController {
             @RequestParam String q,
             Pageable pageable) {
         return ResponseEntity.ok(clinicSearchService.searchClinic(q, pageable));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ClinicSearchResponse>> getClinicsByDepartment(
+            @RequestParam Department department
+            ) {
+        return ResponseEntity.ok(clinicSearchService.getClinicsByDepartment(department));
     }
 }
