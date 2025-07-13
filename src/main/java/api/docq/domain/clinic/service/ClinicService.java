@@ -103,7 +103,8 @@ public class ClinicService {
                         clinic.getDepartment(),
                         clinic.getOpenTime(),
                         clinic.getCloseTime()
-                ));
+                        )
+                );
     }
 
     public List<LocalTime> timeList(LocalTime openTime, LocalTime closeTime) {
