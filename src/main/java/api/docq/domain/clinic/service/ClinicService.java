@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -104,6 +105,18 @@ public class ClinicService {
                         clinic.getCloseTime()
                         )
                 );
+    }
+
+    public List<LocalTime> timeList(LocalTime openTime, LocalTime closeTime) {
+        List<LocalTime> times = new ArrayList<>();
+        LocalTime time = openTime;
+
+        while (!time.isAfter(closeTime)) {
+            times.add(time);
+            time = time.plusMinutes(30);
+        }
+
+        return times;
     }
 
     private void validOpenAndCloseTime(LocalTime openTime, LocalTime closeTime) {
