@@ -15,4 +15,13 @@ public enum Department {
     DERMATOLOGY("피부과");
 
     private final String departmentName;
+
+    public static Department fromName(String name) {
+        for (Department department : Department.values()) {
+            if (department.departmentName.equals(name)) {
+                return department;
+            }
+        }
+        return null;
+    }
 }

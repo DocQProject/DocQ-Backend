@@ -42,7 +42,6 @@ public class SecurityConfig {
                 .logout(AbstractHttpConfigurer::disable)
                 .rememberMe(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.GET, "/api/clinics", "/api/clinics/*").permitAll()
                         .requestMatchers(request -> request.getRequestURI().contains("/auth")).permitAll()
                         .anyRequest().authenticated()
                 )
