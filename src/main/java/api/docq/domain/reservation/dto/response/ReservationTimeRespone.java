@@ -8,14 +8,14 @@ import java.util.List;
 
 @Getter
 public class ReservationTimeRespone {
-    private final List<LocalTime> times;
+    private final List<String> times;
 
     @Builder
-    private ReservationTimeRespone (List<LocalTime> times) {
+    private ReservationTimeRespone (List<String> times) {
         this.times = times;
     }
 
-    public static ReservationTimeRespone of (List<LocalTime> times) {
+    public static ReservationTimeRespone of (List<String> times) {
         return ReservationTimeRespone.builder()
                 .times(times)
                 .build();

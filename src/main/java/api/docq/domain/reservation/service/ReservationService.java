@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -139,7 +140,7 @@ public class ReservationService {
                 .filter(time -> !reservationTimeList.contains(time))
                 .toList();
 
-        return ReservationTimeRespone.of(availableTimes);
+        return ReservationTimeRespone.of(timeFormatter(availableTimes));
     }
 
     @Transactional
@@ -159,5 +160,13 @@ public class ReservationService {
         if (reservationTime.isBefore(openTime) || reservationTime.isAfter(closeTime)) {
             throw new RuntimeException("예약 시간이 병원 운영 시간 내에 있어야 합니다.");
         }
+    }
+
+    private List<String> timeFormatter(List<LocalTime> availableTimes) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+
+        return availableTimes.stream()
+                .map(localTime -> localTime.format(formatter))
+                .collect(Collectors.toList());
     }
 }
