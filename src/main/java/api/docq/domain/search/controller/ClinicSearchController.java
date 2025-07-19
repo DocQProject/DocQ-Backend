@@ -21,14 +21,15 @@ public class ClinicSearchController {
 
     private final ClinicSearchService clinicSearchService;
 
-    @GetMapping
+
+    @GetMapping(params = "q")
     public ResponseEntity<Page<ClinicSearchResponse>> searchClinic(
             @RequestParam String q,
             Pageable pageable) {
         return ResponseEntity.ok(clinicSearchService.searchClinic(q, pageable));
     }
 
-    @GetMapping
+    @GetMapping(params = "department")
     public ResponseEntity<List<ClinicSearchResponse>> getClinicsByDepartment(
             @RequestParam Department department
             ) {
