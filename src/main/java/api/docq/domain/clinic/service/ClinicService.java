@@ -1,10 +1,9 @@
 package api.docq.domain.clinic.service;
 
 import api.docq.domain.clinic.dto.request.ClinicCreateRequest;
-import api.docq.domain.clinic.dto.response.ClinicCreateRespone;
-import api.docq.domain.clinic.dto.response.ClinicGetAllResponse;
-import api.docq.domain.clinic.dto.response.ClinicGetResponse;
+import api.docq.domain.clinic.dto.response.*;
 import api.docq.domain.clinic.entity.Clinic;
+import api.docq.domain.clinic.enums.Department;
 import api.docq.domain.clinic.repository.ClinicRepository;
 import api.docq.domain.review.dto.response.ReviewResponse;
 import api.docq.domain.review.entity.Review;
@@ -19,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -105,6 +105,17 @@ public class ClinicService {
                         clinic.getCloseTime()
                         )
                 );
+    }
+
+    @Transactional(readOnly = true)
+    public ClinicGetDepartmentResponse getClinicDepartments() {
+        Department[] departments = Department.values();
+
+        List<ClinicDepartmentResponse> departMentList = Arrays.stream(departments).map(
+                department -> ClinicDepartmentResponse.of(department.getDepartmentName())
+        ).toList();
+
+        return ClinicGetDepartmentResponse.of(departMentList);
     }
 
     public List<LocalTime> timeList(LocalTime openTime, LocalTime closeTime) {

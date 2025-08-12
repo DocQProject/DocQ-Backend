@@ -2,9 +2,7 @@ package api.docq.domain.clinic.controller;
 
 import api.docq.common.dto.AuthUser;
 import api.docq.domain.clinic.dto.request.ClinicCreateRequest;
-import api.docq.domain.clinic.dto.response.ClinicCreateRespone;
-import api.docq.domain.clinic.dto.response.ClinicGetAllResponse;
-import api.docq.domain.clinic.dto.response.ClinicGetResponse;
+import api.docq.domain.clinic.dto.response.*;
 import api.docq.domain.clinic.service.ClinicService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -54,4 +52,13 @@ public class ClinicController {
     ) {
         return ResponseEntity.ok(clinicService.getClinic(pageable));
     }
+
+    /**
+     * 병원 진료과 조회
+     */
+    @GetMapping("/departments")
+    public ResponseEntity<ClinicGetDepartmentResponse> getClinicDepartments() {
+        return ResponseEntity.ok(clinicService.getClinicDepartments());
+    }
+
 }
