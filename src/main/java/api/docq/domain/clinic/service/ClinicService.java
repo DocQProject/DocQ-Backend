@@ -112,7 +112,7 @@ public class ClinicService {
         Department[] departments = Department.values();
 
         List<ClinicDepartmentResponse> departMentList = Arrays.stream(departments).map(
-                department -> ClinicDepartmentResponse.of(department.getDepartmentName(), department.getDepartmentIcon())
+                department -> ClinicDepartmentResponse.of(department.getDepartmentName())
         ).toList();
 
         return ClinicGetDepartmentResponse.of(departMentList);

@@ -6,18 +6,15 @@ import lombok.Getter;
 @Getter
 public class ClinicDepartmentResponse {
     private final String name;
-    private final String icon;
-    
+
     @Builder
-    private ClinicDepartmentResponse(String name, String icon) {
+    private ClinicDepartmentResponse(String name) {
         this.name = name;
-        this.icon = icon;
     }
     
-    public static ClinicDepartmentResponse of(String name, String icon) {
+    public static ClinicDepartmentResponse of(String name) {
         return ClinicDepartmentResponse.builder()
                 .name(name)
-                .icon(icon)
                 .build();
     }
 }
