@@ -1,5 +1,8 @@
 package api.docq.domain.auth.service;
 
+import api.docq.common.exception.ConflictException;
+import api.docq.common.exception.NotFoundException;
+import api.docq.common.exception.UnauthorizedException;
 import api.docq.config.security.JwtProvider;
 import api.docq.domain.auth.dto.request.SignInRequest;
 import api.docq.domain.auth.dto.request.SignUpRequest;
@@ -13,6 +16,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static api.docq.common.exception.ErrorCode.*;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -25,11 +30,11 @@ public class AuthService {
     @Transactional
     public SignUpResponse signUp(SignUpRequest signUpRequest) {
         if (userRepository.existsByLoginId(signUpRequest.getLoginId())) {
-            throw new RuntimeException("이미 존재하는 회원입니다.");
+            throw new ConflictException(ALREADY_EXISTS_USER);
         }
 
         if (!signUpRequest.getPassword().equals(signUpRequest.getCheckPassword())) {
-            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+            throw new UnauthorizedException(PASSWORD_MISMATCH);
         }
 
         String encodePassword = passwordEncoder.encode(signUpRequest.getPassword());
@@ -51,13 +56,15 @@ public class AuthService {
     @Transactional(readOnly = true)
     public SignInResponse signIn(SignInRequest signInRequest) {
         User user = userRepository.findByLoginId(signInRequest.getLoginId())
-                .orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException(NOT_FOUND_USER));
 
         if (!passwordEncoder.matches(signInRequest.getPassword(), user.getPassword())) {
-            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+            throw new UnauthorizedException(PASSWORD_MISMATCH);
         }
 
         String accessToken = jwtProvider.createAccessToken(user.getId(), user.getLoginId(), user.getName(), user.getRole());
+
+        System.out.println(accessToken);
 
         return SignInResponse.of(accessToken);
     }
