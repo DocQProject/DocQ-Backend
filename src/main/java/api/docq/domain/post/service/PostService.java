@@ -87,6 +87,7 @@ public class PostService {
                 post -> PostListResponse.of(
                 post.getTitle(),
                 post.getAuthor(),
+                post.getContent(),
                 post.getViewCount(),
                 post.getCreatedAt()
         ));
