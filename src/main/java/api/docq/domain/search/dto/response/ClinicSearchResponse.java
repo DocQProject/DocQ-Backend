@@ -20,10 +20,10 @@ public class ClinicSearchResponse {
 
     private final LocalTime closeTime;
 
-    private final Integer starPoint;
+    private final Double starPoint;
 
     @Builder
-    private ClinicSearchResponse(Long clinicId, String name, String address, String department, LocalTime openTime, LocalTime closeTime, Integer starPoint) {
+    private ClinicSearchResponse(Long clinicId, String name, String address, String department, LocalTime openTime, LocalTime closeTime, Double starPoint) {
         this.clinicId = clinicId;
         this.name = name;
         this.address = address;
@@ -33,7 +33,7 @@ public class ClinicSearchResponse {
         this.starPoint = starPoint;
     }
 
-    public static ClinicSearchResponse of(Long clinicId, String name, String address, String department, LocalTime openTime, LocalTime closeTime, Integer starPoint) {
+    public static ClinicSearchResponse of(Long clinicId, String name, String address, String department, LocalTime openTime, LocalTime closeTime, Double starPoint) {
         return ClinicSearchResponse.builder()
                 .clinicId(clinicId)
                 .name(name)

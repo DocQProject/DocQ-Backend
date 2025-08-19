@@ -13,5 +13,5 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     Page<Review> findAllByClinicId(@Param("clinicId") Long clinicId, Pageable pageable);
 
     @Query("SELECT AVG(r.starPoint) FROM Review r WHERE r.clinicId = :clinicId")
-    Integer findAverageStartPointByClinicId(@Param("clinicId") Long clinicId);
+    Double findAverageStarPointByClinicId(@Param("clinicId") Long clinicId);
 }

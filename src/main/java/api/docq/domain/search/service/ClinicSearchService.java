@@ -26,7 +26,7 @@ public class ClinicSearchService {
         Page<Clinic> result = clinicRepository.searchByQuery(query, department, pageable);
 
         return result.map(clinic -> {
-            Integer averageStartPoint = reviewRepository.findAverageStartPointByClinicId(clinic.getId());
+            Double averageStartPoint = reviewRepository.findAverageStarPointByClinicId(clinic.getId());
 
             return ClinicSearchResponse.of(
                     clinic.getId(),
@@ -45,7 +45,7 @@ public class ClinicSearchService {
         List<Clinic> result = clinicRepository.find5RandomClinics(department.name());
 
         return result.stream().map(clinic -> {
-            Integer averageStartPoint = reviewRepository.findAverageStartPointByClinicId(clinic.getId());
+            Double averageStartPoint = reviewRepository.findAverageStarPointByClinicId(clinic.getId());
 
             return ClinicSearchResponse.of(
                     clinic.getId(),
