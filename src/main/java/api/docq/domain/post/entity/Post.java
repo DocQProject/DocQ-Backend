@@ -23,6 +23,7 @@ public class Post extends TimeStamped {
 
     private Integer viewCount;
 
+    @Lob
     private String content;
 
     private boolean isDeleted;
