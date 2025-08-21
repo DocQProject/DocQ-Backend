@@ -4,6 +4,7 @@ import api.docq.common.exception.ConflictException;
 import api.docq.common.exception.NotFoundException;
 import api.docq.common.exception.UnauthorizedException;
 import api.docq.config.security.JwtProvider;
+import api.docq.domain.auth.dto.request.LoginIdCheckRequest;
 import api.docq.domain.auth.dto.request.SignInRequest;
 import api.docq.domain.auth.dto.request.SignUpRequest;
 import api.docq.domain.auth.dto.response.SignInResponse;
@@ -30,7 +31,7 @@ public class AuthService {
     @Transactional
     public SignUpResponse signUp(SignUpRequest signUpRequest) {
         if (userRepository.existsByLoginId(signUpRequest.getLoginId())) {
-            throw new ConflictException(ALREADY_EXISTS_USER);
+            throw new ConflictException(ALREADY_EXISTS_LOGIN_ID);
         }
 
         if (!signUpRequest.getPassword().equals(signUpRequest.getCheckPassword())) {
@@ -67,5 +68,14 @@ public class AuthService {
         System.out.println(accessToken);
 
         return SignInResponse.of(accessToken);
+    }
+
+    public Boolean checkLoginIdAvailability(LoginIdCheckRequest loginIdCheckRequest) {
+
+        if (userRepository.existsByLoginId(loginIdCheckRequest.getLoginId())) {
+            throw new ConflictException(ALREADY_EXISTS_LOGIN_ID);
+        }
+
+        return true;
     }
 }

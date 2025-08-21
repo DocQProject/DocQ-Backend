@@ -7,8 +7,9 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum ErrorCode {
-    //cCONFLICT
+    //CONFLICT
     ALREADY_EXISTS_USER(HttpStatus.CONFLICT, "이미 존재하는 회원입니다."),
+    ALREADY_EXISTS_LOGIN_ID(HttpStatus.CONFLICT, "이미 존재하는 아이디입니다."),
 
     //NOT_FOUND
     NOT_FOUND_USER(HttpStatus.NOT_FOUND, "존재하지 않는 회원입니다."),

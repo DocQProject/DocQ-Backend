@@ -1,5 +1,6 @@
 package api.docq.domain.auth.controller;
 
+import api.docq.domain.auth.dto.request.LoginIdCheckRequest;
 import api.docq.domain.auth.dto.request.SignInRequest;
 import api.docq.domain.auth.dto.request.SignUpRequest;
 import api.docq.domain.auth.dto.response.SignInResponse;
@@ -37,5 +38,15 @@ public class AuthController {
             @Valid @RequestBody SignInRequest signInRequest
     ) {
         return ResponseEntity.ok(authService.signIn(signInRequest));
+    }
+
+    /**
+     * 회원가입 시 아이디 중복 확인
+     */
+    @PostMapping("/check/loginId")
+    public ResponseEntity<Boolean> checkLoginIdAvailability(
+            @Valid @RequestBody LoginIdCheckRequest loginIdCheckRequest
+    ) {
+        return ResponseEntity.ok(authService.checkLoginIdAvailability(loginIdCheckRequest));
     }
 }
