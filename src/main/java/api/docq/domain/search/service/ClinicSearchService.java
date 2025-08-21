@@ -32,7 +32,7 @@ public class ClinicSearchService {
                     clinic.getId(),
                     clinic.getName(),
                     clinic.getAddress(),
-                    clinic.getDepartment().name(),
+                    clinic.getDepartment().getDepartmentName(),
                     clinic.getOpenTime(),
                     clinic.getCloseTime(),
                     averageStartPoint
