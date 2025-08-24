@@ -59,12 +59,10 @@ public class User extends TimeStamped {
                 .build();
     }
 
-    public void updatePassword(String newPassword) {
-        this.password = newPassword;
-    }
-
-    public void updateNameAndEmail(String name, String email) {
+    public void updateProfile(String loginId, String name, String password, String email) {
+        this.loginId = loginId;
         this.name = name;
+        this.password = password;
         this.email = email;
     }
 

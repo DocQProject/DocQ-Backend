@@ -19,7 +19,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class    ImageService {
+public class ImageService {
 
     private final ImageRepository imageRepository;
 
@@ -28,7 +28,7 @@ public class    ImageService {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    @Value("${cloud.aws.region}")
+    @Value("${spring.cloud.aws.region.static}")
     private String region;
 
     public String uploadFile(MultipartFile multipartFile, ReferenceType referenceType, Long referenceId) {

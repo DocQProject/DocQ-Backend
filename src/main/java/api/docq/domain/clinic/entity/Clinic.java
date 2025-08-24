@@ -21,7 +21,7 @@ public class Clinic extends TimeStamped {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String address;
 
     @Column(nullable = false)
@@ -32,6 +32,8 @@ public class Clinic extends TimeStamped {
 
     private LocalTime closeTime;
 
+    private Boolean isDeleted;
+
     @Builder()
     private Clinic (String name, String address, Department department, LocalTime openTime, LocalTime closeTime) {
         this.name = name;
@@ -39,6 +41,7 @@ public class Clinic extends TimeStamped {
         this.department =department;
         this.openTime = openTime;
         this.closeTime = closeTime;
+        this.isDeleted = false;
     }
 
     public static Clinic of(String name, String address, Department department, LocalTime openTime, LocalTime closeTime) {
@@ -49,5 +52,9 @@ public class Clinic extends TimeStamped {
                 .openTime(openTime)
                 .closeTime(closeTime)
                 .build();
+    }
+
+    public void deleteClinic() {
+        this.isDeleted = true;
     }
 }

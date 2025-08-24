@@ -3,6 +3,7 @@ package api.docq.domain.reservation.dto.response;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -15,33 +16,33 @@ public class ReservationUserResponse {
 
     private final String clinicName;
 
+    private final LocalDate date;
+
     private final LocalTime time;
 
     private final String message;
 
-    private final LocalDateTime createdAt;
-
     private final boolean isDeleted;
 
     @Builder
-    private ReservationUserResponse(Long reservationId, String userName, String clinicName, LocalTime time, String message, LocalDateTime createdAt, boolean isDeleted) {
+    private ReservationUserResponse(Long reservationId, String userName, String clinicName, LocalDate date, LocalTime time, String message, boolean isDeleted) {
         this.reservationId = reservationId;
         this.userName = userName;
         this.clinicName = clinicName;
         this.time = time;
         this.message = message;
-        this.createdAt = createdAt;
+        this.date = date;
         this.isDeleted = isDeleted;
     }
 
-    public static ReservationUserResponse of(Long reservationId, String userName, String clinicName, LocalTime time, String message, LocalDateTime createdAt, boolean isDeleted) {
+    public static ReservationUserResponse of(Long reservationId, String userName, String clinicName, LocalDate date, LocalTime time, String message, boolean isDeleted) {
         return ReservationUserResponse.builder()
                 .reservationId(reservationId)
                 .userName(userName)
                 .clinicName(clinicName)
                 .time(time)
                 .message(message)
-                .createdAt(createdAt)
+                .date(date)
                 .isDeleted(isDeleted)
                 .build();
     }

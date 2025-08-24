@@ -13,9 +13,10 @@ public enum ErrorCode {
 
     //NOT_FOUND
     NOT_FOUND_USER(HttpStatus.NOT_FOUND, "존재하지 않는 회원입니다."),
+    NOT_FOUND_CLINIC(HttpStatus.NOT_FOUND, "존재하지 않는 병원입니다."),
 
     //BAD_REQUEST
-
+    NO_CLINIC_EXIST(HttpStatus.BAD_REQUEST, "등록된 내 병원이 존재하지 않습니다."),
 
     //FORBIDDEN
 

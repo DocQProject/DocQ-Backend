@@ -2,8 +2,7 @@ package api.docq.domain.user.controller;
 
 import api.docq.common.dto.AuthUser;
 import api.docq.domain.user.dto.request.UserDeleteRequest;
-import api.docq.domain.user.dto.request.UserUpdatePasswordRequest;
-import api.docq.domain.user.dto.request.UserUpdateProfileRequest;
+import api.docq.domain.user.dto.request.UserProfileUpdateRequest;
 import api.docq.domain.user.dto.response.UserGetResponse;
 import api.docq.domain.user.dto.response.UserResponse;
 import api.docq.domain.user.service.UserService;
@@ -22,18 +21,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
-
-    /**
-     * 유저 비밀번호 변경하기
-     */
-    @PatchMapping("/password")
-    public ResponseEntity<Void> updatePassword(
-            @AuthenticationPrincipal AuthUser authUser,
-            @Valid @RequestBody UserUpdatePasswordRequest request
-    ) {
-        userService.updatePassword(authUser.getUserId(), request);
-        return ResponseEntity.ok().build();
-    }
 
     /**
      * 유저 조회하기 (본인용 - 일반 유저)
@@ -57,12 +44,12 @@ public class UserController {
     }
 
     /**
-     * 유저 프로필 변경하기(name, email)
+     * 유저 프로필 변경하기(name, email, password)
      */
     @PatchMapping("/profile")
     public ResponseEntity<Void> updateProfile(
             @AuthenticationPrincipal AuthUser authUser,
-            @Valid @RequestBody UserUpdateProfileRequest request
+            @Valid @RequestBody UserProfileUpdateRequest request
     ) {
         userService.updateProfile(authUser.getUserId(), request);
         return ResponseEntity.ok().build();

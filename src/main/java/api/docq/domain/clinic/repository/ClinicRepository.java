@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ClinicRepository extends JpaRepository<Clinic, Long> {
-    boolean existsByAddress(String address);
+    boolean existsByAddressAndIsDeletedFalse(String address);
 
     @Query("SELECT c.name FROM Clinic c WHERE c.id= :clinicId")
     Optional<String> findClinicNameById(@Param("clinicId") Long clinicId);
