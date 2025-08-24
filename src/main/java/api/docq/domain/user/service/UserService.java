@@ -1,10 +1,11 @@
 package api.docq.domain.user.service;
 
+import api.docq.common.exception.ErrorCode;
+import api.docq.common.exception.UnauthorizedException;
 import api.docq.domain.clinic.entity.Clinic;
 import api.docq.domain.clinic.repository.ClinicRepository;
 import api.docq.domain.user.dto.request.UserDeleteRequest;
-import api.docq.domain.user.dto.request.UserUpdatePasswordRequest;
-import api.docq.domain.user.dto.request.UserUpdateProfileRequest;
+import api.docq.domain.user.dto.request.UserProfileUpdateRequest;
 import api.docq.domain.user.dto.response.UserGetResponse;
 import api.docq.domain.user.dto.response.UserResponse;
 import api.docq.domain.user.entity.User;
@@ -28,26 +29,14 @@ public class UserService {
     private final ClinicRepository clinicRepository;
 
     @Transactional
-    public void updatePassword(Long userId, UserUpdatePasswordRequest request) {
+    public void updateProfile(Long userId, UserProfileUpdateRequest request) {
         User user = findUserByUserIdOrElseThrow(userId);
 
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new RuntimeException("기존 비밀번호가 일치하지 않습니다.");
+        if (userRepository.existsByLoginId(request.getLoginId())) {
+            throw new UnauthorizedException(ErrorCode.ALREADY_EXISTS_USER);
         }
 
-        if (request.getPassword().equals(request.getNewPassword())) {
-            throw new RuntimeException("새 비밀번호는 기존 비밀번화 일치할 수 없습니다.");
-        }
-
-        String encodePassword = passwordEncoder.encode(request.getNewPassword());
-        user.updatePassword(encodePassword);
-    }
-
-    @Transactional
-    public void updateProfile(Long userId, UserUpdateProfileRequest request) {
-        User user = findUserByUserIdOrElseThrow(userId);
-
-        user.updateNameAndEmail(request.getName(), request.getEmail());
+        user.updateProfile(request.getLoginId(), request.getName(), passwordEncoder.encode(request.getPassword()), request.getEmail());
     }
 
     @Transactional

@@ -89,9 +89,9 @@ public class ReservationService {
                     reservation.getId(),
                     user.getName(),
                     clinic.getName(),
+                    reservation.getDate(),
                     reservation.getTime(),
                     reservation.getMessage(),
-                    reservation.getCreatedAt(),
                     reservation.isDeleted()
             );
         });

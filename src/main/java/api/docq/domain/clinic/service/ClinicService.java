@@ -1,5 +1,8 @@
 package api.docq.domain.clinic.service;
 
+import api.docq.common.exception.BadRequestException;
+import api.docq.common.exception.ErrorCode;
+import api.docq.common.exception.NotFoundException;
 import api.docq.domain.clinic.dto.request.ClinicCreateRequest;
 import api.docq.domain.clinic.dto.response.*;
 import api.docq.domain.clinic.entity.Clinic;
@@ -9,6 +12,7 @@ import api.docq.domain.review.dto.response.ReviewResponse;
 import api.docq.domain.review.entity.Review;
 import api.docq.domain.review.repository.ReviewRepository;
 import api.docq.domain.review.service.ReviewService;
+import api.docq.domain.user.entity.User;
 import api.docq.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -33,7 +37,7 @@ public class ClinicService {
     public ClinicCreateRespone createClinic(Long userId, ClinicCreateRequest request) {
         userService.existsByUserId(userId);
 
-        if (clinicRepository.existsByAddress(request.getAddress())) {
+        if (clinicRepository.existsByAddressAndIsDeletedFalse(request.getAddress())) {
             throw new RuntimeException("이미 존재하는 병원입니다.");
         }
 
@@ -48,6 +52,8 @@ public class ClinicService {
         );
 
         clinicRepository.save(clinic);
+
+        userService.updateClinic(userId, clinic.getId());
 
         return ClinicCreateRespone.of(
                 clinic.getId(),
@@ -66,6 +72,45 @@ public class ClinicService {
                 .orElseThrow(() -> new RuntimeException("병원이 존재하지 않습니다."));
 
         Page<Review> reviews = reviewRepository.findAllByClinicId(clinicId, pageable);
+
+        Page<ReviewResponse> reviewResponses = reviews
+                .map(review -> {
+
+                    List<String> imageUrls = reviewService.getImageUrls(review.getId());
+
+                    return ReviewResponse.of(
+                            review.getAuthor(),
+                            review.getContent(),
+                            review.getStarPoint(),
+                            imageUrls,
+                            review.getCreatedAt()
+                    );
+                });
+
+        return ClinicGetResponse.of(
+                clinic.getId(),
+                clinic.getName(),
+                clinic.getAddress(),
+                clinic.getDepartment(),
+                clinic.getOpenTime(),
+                clinic.getCloseTime(),
+                clinic.getCreatedAt(),
+                reviewResponses
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public ClinicGetResponse getMyClinic(Long userId, Pageable pageable) {
+        User user = userService.findUserByUserIdOrElseThrow(userId);
+
+        if (user.getClinicId() == null) {
+            throw new BadRequestException(ErrorCode.NO_CLINIC_EXIST.getErrorMessage());
+        }
+
+        Clinic clinic = clinicRepository.findById(user.getClinicId())
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_CLINIC));;
+
+        Page<Review> reviews = reviewRepository.findAllByClinicId(clinic.getId(), pageable);
 
         Page<ReviewResponse> reviewResponses = reviews
                 .map(review -> {
@@ -116,6 +161,18 @@ public class ClinicService {
         ).toList();
 
         return ClinicGetDepartmentResponse.of(departMentList);
+    }
+
+    @Transactional
+    public void deleteClinic(Long userId) {
+        User user = userService.findUserByUserIdOrElseThrow(userId);
+
+        Clinic clinic = clinicRepository.findById(user.getClinicId())
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_CLINIC));
+
+        clinic.deleteClinic();
+
+        user.updateClinic(null);
     }
 
     public List<LocalTime> timeList(LocalTime openTime, LocalTime closeTime) {

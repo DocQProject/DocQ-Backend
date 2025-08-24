@@ -9,7 +9,6 @@ import api.docq.domain.auth.dto.request.SignInRequest;
 import api.docq.domain.auth.dto.request.SignUpRequest;
 import api.docq.domain.auth.dto.response.SignInResponse;
 import api.docq.domain.auth.dto.response.SignUpResponse;
-import api.docq.domain.clinic.repository.ClinicRepository;
 import api.docq.domain.user.entity.User;
 import api.docq.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +25,6 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
-    private final ClinicRepository clinicRepository;
 
     @Transactional
     public SignUpResponse signUp(SignUpRequest signUpRequest) {
@@ -64,8 +62,6 @@ public class AuthService {
         }
 
         String accessToken = jwtProvider.createAccessToken(user.getId(), user.getLoginId(), user.getName(), user.getRole());
-
-        System.out.println(accessToken);
 
         return SignInResponse.of(accessToken);
     }

@@ -61,4 +61,15 @@ public class ClinicController {
         return ResponseEntity.ok(clinicService.getClinicDepartments());
     }
 
+    @GetMapping("/my-clinic")
+    public ClinicGetResponse getMyClinic(@AuthenticationPrincipal AuthUser authUser, Pageable pageable) {
+        return clinicService.getMyClinic(authUser.getUserId(), pageable);
+    }
+
+    @DeleteMapping("/my-clinic")
+    public ResponseEntity<Void> deleteClinic(@AuthenticationPrincipal AuthUser authUser) {
+        clinicService.deleteClinic(authUser.getUserId());
+        return ResponseEntity.ok().build();
+    }
+
 }
