@@ -23,12 +23,12 @@ public class ClinicGetResponse {
 
     private final String closeTime;
 
-    private final LocalDateTime createdAt;
+    private final String createdAt;
 
     private final Page<ReviewResponse> reviews;
 
     @Builder
-    private ClinicGetResponse(Long clinicId, String name, String address, Department department, String openTime, String closeTime, LocalDateTime createdAt, Page<ReviewResponse> reviews) {
+    private ClinicGetResponse(Long clinicId, String name, String address, Department department, String openTime, String closeTime, String createdAt, Page<ReviewResponse> reviews) {
         this.clinicId = clinicId;
         this.name = name;
         this.address = address;
@@ -39,7 +39,7 @@ public class ClinicGetResponse {
         this.reviews =reviews;
     }
 
-    public static ClinicGetResponse of(Long clinicId, String name, String address, Department department, String openTime, String closeTime, LocalDateTime createdAt, Page<ReviewResponse> reviews) {
+    public static ClinicGetResponse of(Long clinicId, String name, String address, Department department, String openTime, String closeTime, String createdAt, Page<ReviewResponse> reviews) {
         return ClinicGetResponse.builder()
                 .clinicId(clinicId)
                 .name(name)

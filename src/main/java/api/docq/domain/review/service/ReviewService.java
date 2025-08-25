@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -42,7 +43,7 @@ public class ReviewService {
                 review.getContent(),
                 review.getStarPoint(),
                 imageUrls,
-                review.getCreatedAt()
+                review.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
         ) ;
     }
 
@@ -64,7 +65,7 @@ public class ReviewService {
                 review.getContent(),
                 review.getStarPoint(),
                 imageUrls,
-                review.getCreatedAt()
+                review.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
         );
     }
 

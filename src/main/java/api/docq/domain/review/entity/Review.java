@@ -35,7 +35,7 @@ public class Review extends TimeStamped {
         this.starPoint = starPoint;
     }
 
-    public static Review of(Long userId, Long clinicId,String author, String content, Integer starPoint) {
+    public static Review of(Long userId, Long clinicId, String content, String author, Integer starPoint) {
         return Review.builder()
                 .userId(userId)
                 .clinicId(clinicId)
