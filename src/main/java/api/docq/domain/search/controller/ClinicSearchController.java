@@ -21,7 +21,6 @@ public class ClinicSearchController {
 
     private final ClinicSearchService clinicSearchService;
 
-
     @GetMapping(params = "q")
     public ResponseEntity<Page<ClinicSearchResponse>> searchClinic(
             @RequestParam String q,

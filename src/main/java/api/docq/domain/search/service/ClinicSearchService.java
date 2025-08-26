@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -26,15 +27,15 @@ public class ClinicSearchService {
         Page<Clinic> result = clinicRepository.searchByQuery(query, department, pageable);
 
         return result.map(clinic -> {
-            Double averageStartPoint = reviewRepository.findAverageStarPointByClinicId(clinic.getId());
+            Integer averageStartPoint = reviewRepository.findAverageStarPointByClinicId(clinic.getId());
 
             return ClinicSearchResponse.of(
                     clinic.getId(),
                     clinic.getName(),
                     clinic.getAddress(),
                     clinic.getDepartment().getDepartmentName(),
-                    clinic.getOpenTime(),
-                    clinic.getCloseTime(),
+                    clinic.getOpenTime().format(DateTimeFormatter.ofPattern("HH:mm")),
+                    clinic.getCloseTime().format(DateTimeFormatter.ofPattern("HH:mm")),
                     averageStartPoint
             );
         });
@@ -45,15 +46,15 @@ public class ClinicSearchService {
         List<Clinic> result = clinicRepository.find5RandomClinics(department.name());
 
         return result.stream().map(clinic -> {
-            Double averageStartPoint = reviewRepository.findAverageStarPointByClinicId(clinic.getId());
+            Integer averageStartPoint = reviewRepository.findAverageStarPointByClinicId(clinic.getId());
 
             return ClinicSearchResponse.of(
                     clinic.getId(),
                     clinic.getName(),
                     clinic.getAddress(),
                     clinic.getDepartment().name(),
-                    clinic.getOpenTime(),
-                    clinic.getCloseTime(),
+                    clinic.getOpenTime().format(DateTimeFormatter.ofPattern("HH:mm")),
+                    clinic.getCloseTime().format(DateTimeFormatter.ofPattern("HH:mm")),
                     averageStartPoint
             );
         }).toList();
