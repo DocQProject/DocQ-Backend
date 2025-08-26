@@ -20,7 +20,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -73,22 +72,6 @@ public class ClinicService {
         Clinic clinic = clinicRepository.findById(clinicId)
                 .orElseThrow(() -> new RuntimeException("병원이 존재하지 않습니다."));
 
-        Page<Review> reviews = reviewRepository.findAllByClinicId(clinicId, pageable);
-
-        Page<ReviewResponse> reviewResponses = reviews
-                .map(review -> {
-
-                    List<String> imageUrls = reviewService.getImageUrls(review.getId());
-
-                    return ReviewResponse.of(
-                            review.getAuthor(),
-                            review.getContent(),
-                            review.getStarPoint(),
-                            imageUrls,
-                            review.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
-                    );
-                });
-
         return ClinicGetResponse.of(
                 clinic.getId(),
                 clinic.getName(),
@@ -96,13 +79,12 @@ public class ClinicService {
                 clinic.getDepartment(),
                 clinic.getOpenTime().format(DateTimeFormatter.ofPattern("HH:mm")),
                 clinic.getCloseTime().format(DateTimeFormatter.ofPattern("HH:mm")),
-                clinic.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")),
-                reviewResponses
+                clinic.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
         );
     }
 
     @Transactional(readOnly = true)
-    public ClinicGetResponse getMyClinic(Long userId, Pageable pageable) {
+    public ClinicOwnerGetResponse getMyClinic(Long userId, Pageable pageable) {
         User user = userService.findUserByUserIdOrElseThrow(userId);
 
         if (user.getClinicId() == null) {
@@ -128,7 +110,7 @@ public class ClinicService {
                     );
                 });
 
-        return ClinicGetResponse.of(
+        return ClinicOwnerGetResponse.of(
                 clinic.getId(),
                 clinic.getName(),
                 clinic.getAddress(),

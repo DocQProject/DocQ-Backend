@@ -6,6 +6,8 @@ import api.docq.domain.review.dto.response.ReviewResponse;
 import api.docq.domain.review.service.ReviewService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +29,17 @@ public class ReviewController {
             @PathVariable Long clinicId
     ) {
         return ResponseEntity.ok(reviewService.createReview(authUser, request, clinicId));
+    }
+
+    /**
+     * 리뷰 다건 조회
+     */
+    @GetMapping("/clinics/{clinicId}/reviews")
+    public ResponseEntity<Page<ReviewResponse>> getReviews(
+            @PathVariable Long clinicId,
+            Pageable pageable
+    ) {
+        return ResponseEntity.ok(reviewService.getReviews(clinicId, pageable));
     }
 
     /**

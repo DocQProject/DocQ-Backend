@@ -16,14 +16,14 @@ public class ClinicSearchResponse {
 
     private final String department;
 
-    private final LocalTime openTime;
+    private final String openTime;
 
-    private final LocalTime closeTime;
+    private final String closeTime;
 
-    private final Double starPoint;
+    private final Integer starPoint;
 
     @Builder
-    private ClinicSearchResponse(Long clinicId, String name, String address, String department, LocalTime openTime, LocalTime closeTime, Double starPoint) {
+    private ClinicSearchResponse(Long clinicId, String name, String address, String department, String openTime, String closeTime, Integer starPoint) {
         this.clinicId = clinicId;
         this.name = name;
         this.address = address;
@@ -33,7 +33,7 @@ public class ClinicSearchResponse {
         this.starPoint = starPoint;
     }
 
-    public static ClinicSearchResponse of(Long clinicId, String name, String address, String department, LocalTime openTime, LocalTime closeTime, Double starPoint) {
+    public static ClinicSearchResponse of(Long clinicId, String name, String address, String department, String openTime, String closeTime, Integer starPoint) {
         return ClinicSearchResponse.builder()
                 .clinicId(clinicId)
                 .name(name)

@@ -5,11 +5,15 @@ import api.docq.common.image.entity.Image;
 import api.docq.common.image.enums.ReferenceType;
 import api.docq.common.image.repository.ImageRepository;
 import api.docq.common.image.service.ImageService;
+import api.docq.domain.clinic.entity.Clinic;
+import api.docq.domain.clinic.repository.ClinicRepository;
 import api.docq.domain.review.dto.request.ReviewRequest;
 import api.docq.domain.review.dto.response.ReviewResponse;
 import api.docq.domain.review.entity.Review;
 import api.docq.domain.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,9 +48,27 @@ public class ReviewService {
                 review.getStarPoint(),
                 imageUrls,
                 review.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
-        ) ;
+        );
     }
 
+    @Transactional(readOnly = true)
+    public Page<ReviewResponse> getReviews(Long clinicId, Pageable pageable) {
+        Page<Review> reviews = reviewRepository.findAllByClinicId(clinicId, pageable);
+
+        return reviews
+                .map(review -> {
+
+                    List<String> imageUrls = getImageUrls(review.getId());
+
+                    return ReviewResponse.of(
+                            review.getAuthor(),
+                            review.getContent(),
+                            review.getStarPoint(),
+                            imageUrls,
+                            review.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+                    );
+                });
+    }
 
     @Transactional
     public ReviewResponse updateReview(Long userId, String userName, ReviewRequest request, Long reviewId) {
@@ -80,7 +102,7 @@ public class ReviewService {
 
         List<String> imageUrls = getImageUrls(reviewId);
 
-        for(String url : imageUrls) {
+        for (String url : imageUrls) {
             imageService.deleteImage(url);
         }
 

@@ -62,7 +62,7 @@ public class ClinicController {
     }
 
     @GetMapping("/my-clinic")
-    public ClinicGetResponse getMyClinic(@AuthenticationPrincipal AuthUser authUser, Pageable pageable) {
+    public ClinicOwnerGetResponse getMyClinic(@AuthenticationPrincipal AuthUser authUser, Pageable pageable) {
         return clinicService.getMyClinic(authUser.getUserId(), pageable);
     }
 
