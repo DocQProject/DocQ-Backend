@@ -1,6 +1,7 @@
 package api.docq.domain.clinic.dto.response;
 
 import api.docq.domain.clinic.enums.Department;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Getter;
 

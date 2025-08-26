@@ -20,7 +20,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -83,7 +85,7 @@ public class ClinicService {
                             review.getContent(),
                             review.getStarPoint(),
                             imageUrls,
-                            review.getCreatedAt()
+                            review.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
                     );
                 });
 
@@ -92,9 +94,9 @@ public class ClinicService {
                 clinic.getName(),
                 clinic.getAddress(),
                 clinic.getDepartment(),
-                clinic.getOpenTime(),
-                clinic.getCloseTime(),
-                clinic.getCreatedAt(),
+                clinic.getOpenTime().format(DateTimeFormatter.ofPattern("HH:mm")),
+                clinic.getCloseTime().format(DateTimeFormatter.ofPattern("HH:mm")),
+                clinic.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")),
                 reviewResponses
         );
     }
@@ -122,7 +124,7 @@ public class ClinicService {
                             review.getContent(),
                             review.getStarPoint(),
                             imageUrls,
-                            review.getCreatedAt()
+                            review.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
                     );
                 });
 
@@ -131,9 +133,9 @@ public class ClinicService {
                 clinic.getName(),
                 clinic.getAddress(),
                 clinic.getDepartment(),
-                clinic.getOpenTime(),
-                clinic.getCloseTime(),
-                clinic.getCreatedAt(),
+                clinic.getOpenTime().format(DateTimeFormatter.ofPattern("HH:mm")),
+                clinic.getCloseTime().format(DateTimeFormatter.ofPattern("HH:mm")),
+                clinic.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")),
                 reviewResponses
         );
     }

@@ -17,10 +17,10 @@ public class ReviewResponse {
 
     private final List<String> imageURLs;
 
-    private final LocalDateTime createdAt;
+    private final String createdAt;
 
     @Builder
-    private ReviewResponse(String author, String content, Integer starPoint, List<String> imageURLs, LocalDateTime createdAt) {
+    private ReviewResponse(String author, String content, Integer starPoint, List<String> imageURLs, String createdAt) {
         this.author = author;
         this.content = content;
         this.starPoint = starPoint;
@@ -28,7 +28,7 @@ public class ReviewResponse {
         this.createdAt = createdAt;
     }
 
-    public static ReviewResponse of(String author, String content, Integer starPoint, List<String> imageURLs, LocalDateTime createdAt) {
+    public static ReviewResponse of(String author, String content, Integer starPoint, List<String> imageURLs, String createdAt) {
         return ReviewResponse.builder()
                 .author(author)
                 .content(content)
