@@ -102,6 +102,7 @@ public class ClinicService {
                     List<String> imageUrls = reviewService.getImageUrls(review.getId());
 
                     return ReviewResponse.of(
+                            review.getId(),
                             review.getAuthor(),
                             review.getContent(),
                             review.getStarPoint(),
