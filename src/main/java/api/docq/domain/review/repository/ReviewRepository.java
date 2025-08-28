@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
-    @Query("SELECT r FROM Review r WHERE r.clinicId = :clinicId")
+    @Query("SELECT r FROM Review r WHERE r.clinicId = :clinicId ORDER BY r.createdAt DESC")
     Page<Review> findAllByClinicId(@Param("clinicId") Long clinicId, Pageable pageable);
 
     @Query("SELECT AVG(r.starPoint) FROM Review r WHERE r.clinicId = :clinicId")

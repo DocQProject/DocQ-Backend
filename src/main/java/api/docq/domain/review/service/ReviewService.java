@@ -43,6 +43,7 @@ public class ReviewService {
         List<String> imageUrls = getImageUrls(review.getId());
 
         return ReviewResponse.of(
+                review.getId(),
                 authUser.getName(),
                 review.getContent(),
                 review.getStarPoint(),
@@ -61,6 +62,7 @@ public class ReviewService {
                     List<String> imageUrls = getImageUrls(review.getId());
 
                     return ReviewResponse.of(
+                            review.getId(),
                             review.getAuthor(),
                             review.getContent(),
                             review.getStarPoint(),
@@ -83,6 +85,7 @@ public class ReviewService {
         List<String> imageUrls = getImageUrls(review.getId());
 
         return ReviewResponse.of(
+                review.getId(),
                 userName,
                 review.getContent(),
                 review.getStarPoint(),
