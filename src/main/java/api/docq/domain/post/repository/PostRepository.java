@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
-    @Query("select p from Post p where p.isDeleted = false")
+    @Query("select p from Post p where p.isDeleted = false order by p.createdAt desc ")
     Page<Post> findAllNotDeleted(Pageable pageable);
 }

@@ -10,6 +10,8 @@ import java.util.List;
 @Getter
 public class PostResponse {
 
+    private final Long id;
+
     private final String title;
 
     private final String content;
@@ -27,7 +29,8 @@ public class PostResponse {
     private final List<String> imageURLs;
 
     @Builder
-    private PostResponse(String title, String content, String author, Integer viewCount, LocalDateTime createdAt, LocalDateTime updatedAt, List<CommentResponse> comments, List<String> imageURLs) {
+    private PostResponse(Long id, String title, String content, String author, Integer viewCount, LocalDateTime createdAt, LocalDateTime updatedAt, List<CommentResponse> comments, List<String> imageURLs) {
+        this.id = id;
         this.title = title;
         this.content = content;
         this.author = author;
@@ -38,8 +41,9 @@ public class PostResponse {
         this.imageURLs = imageURLs;
     }
 
-    public static PostResponse of(String title, String content, String author, Integer viewCount, LocalDateTime createdAt, LocalDateTime updatedAt, List<CommentResponse> comments, List<String> imageURLs) {
+    public static PostResponse of(Long id, String title, String content, String author, Integer viewCount, LocalDateTime createdAt, LocalDateTime updatedAt, List<CommentResponse> comments, List<String> imageURLs) {
         return PostResponse.builder()
+                .id(id)
                 .title(title)
                 .content(content)
                 .author(author)

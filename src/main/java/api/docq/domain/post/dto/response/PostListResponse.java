@@ -3,10 +3,10 @@ package api.docq.domain.post.dto.response;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
-
 @Getter
 public class PostListResponse {
+
+    private final Long id;
 
     private final String title;
 
@@ -16,10 +16,11 @@ public class PostListResponse {
 
     private final Integer viewCount;
 
-    private final LocalDateTime createdAt;
+    private final String createdAt;
 
     @Builder
-    private PostListResponse(String title, String author, String content, Integer viewCount, LocalDateTime createdAt) {
+    private PostListResponse(Long id, String title, String author, String content, Integer viewCount, String createdAt) {
+        this.id = id;
         this.title = title;
         this.author = author;
         this.content = content;
@@ -27,8 +28,9 @@ public class PostListResponse {
         this.createdAt = createdAt;
     }
 
-    public static PostListResponse of(String title, String author, String content, Integer viewCount, LocalDateTime createdAt) {
+    public static PostListResponse of(Long id, String title, String author, String content, Integer viewCount, String createdAt) {
         return PostListResponse.builder()
+                .id(id)
                 .title(title)
                 .author(author)
                 .content(content)
