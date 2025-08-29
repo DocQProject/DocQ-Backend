@@ -21,9 +21,9 @@ public interface ClinicRepository extends JpaRepository<Clinic, Long> {
     Page<Clinic> findAllIsNotDeleted(Pageable pageable);
 
     @Query("SELECT c FROM Clinic c " +
-            "WHERE c.name LIKE CONCAT('%', :query, '%') " +
+            "WHERE (c.name LIKE CONCAT('%', :query, '%') " +
             "OR c.address LIKE CONCAT('%', :query, '%') " +
-            "OR (:department IS NOT NULL AND c.department = :department) ")
+            "OR (:department IS NOT NULL AND c.department = :department)) AND c.isDeleted = false ")
     Page<Clinic> searchByQuery(@Param("query") String query, @Param("department") Department department, Pageable pageable);
 
     @Query(value = "SELECT * FROM clinics WHERE clinics.department = :department ORDER BY RAND() LIMIT 5", nativeQuery = true)
