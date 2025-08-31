@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 
@@ -41,8 +42,10 @@ public class PostService {
 
         List<String> imageURLs = getImageUrls(post.getId());
 
+        postRepository.save(post);
 
         return PostResponse.of(
+                post.getId(),
                 post.getTitle(),
                 post.getContent(),
                 post.getAuthor(),
@@ -66,6 +69,7 @@ public class PostService {
         List<String> imageURLs = getImageUrls(post.getId());
 
         return PostResponse.of(
+                post.getId(),
                 post.getTitle(),
                 post.getContent(),
                 post.getAuthor(),
@@ -83,14 +87,18 @@ public class PostService {
 
         Page<Post> posts = postRepository.findAllNotDeleted(pageable);
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-'['HH:mm']'");
+
         return posts.map(
                 post -> PostListResponse.of(
-                post.getTitle(),
-                post.getAuthor(),
-                post.getContent(),
-                post.getViewCount(),
-                post.getCreatedAt()
-        ));
+                        post.getId(),
+                        post.getTitle(),
+                        post.getAuthor(),
+                        post.getContent(),
+                        post.getViewCount(),
+                        post.getCreatedAt().format(formatter)
+                )
+        );
     }
 
 
@@ -108,6 +116,7 @@ public class PostService {
         List<String> imageURLs = getImageUrls(postId);
 
         return PostResponse.of(
+                post.getId(),
                 post.getTitle(),
                 post.getContent(),
                 post.getAuthor(),

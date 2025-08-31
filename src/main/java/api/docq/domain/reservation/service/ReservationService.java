@@ -45,7 +45,7 @@ public class ReservationService {
 
         validReservation(request.getTime(), clinic.getOpenTime(), clinic.getCloseTime());
 
-        if (reservationRepository.existsByClinicIdAndTime(clinicId, request.getTime())) {
+        if (reservationRepository.existsByClinicIdAndDateAndTime(clinicId, request.getDate(), request.getTime())) {
             throw new RuntimeException("해당 시간에는 이미 예약이 존재합니다.");
         }
 

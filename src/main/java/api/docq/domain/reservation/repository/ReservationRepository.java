@@ -15,7 +15,7 @@ import java.util.List;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
-    boolean existsByClinicIdAndTime(Long clinicId, LocalTime time);
+    boolean existsByClinicIdAndDateAndTime(Long clinicId, LocalDate date, LocalTime time);
 
     @Query("SELECT r FROM Reservation r WHERE r.userId = :userId")
     Page<Reservation> findAllByUserId(@Param("userId") Long userId, Pageable pageable);
